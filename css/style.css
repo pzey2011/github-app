@@ -1,4 +1,15 @@
 body {
-  background-color: #00ff00; }
-  body nav ul li a {
-    font-size: 20px; }
+  background-color: #fff;
+  font-family: "M PLUS Rounded 1c script=all rev=2", "Adobe Blank";
+  font-style: normal; }
+  body div#app h1 {
+    font-weight: 900; }
+  body div#app h2 {
+    font-weight: 500; }
+  body div#app p {
+    font-weight: 300; }
+  body div#app .container {
+    margin: auto;
+    max-width: 300px; }
+    body div#app .container form:focus button {
+      background-color: black; }

@@ -1,12 +1,33 @@
-$color : #00ff00;
+$color : #fff;
 
 body{
   background-color: $color;
-  nav {
-    ul li{
-      a{
-        font-size: 20px;
+  font-family: "M PLUS Rounded 1c script=all rev=2", "Adobe Blank";
+  font-style: normal;
+  div#app {
+    h1 {
+      font-weight: 900;
+    }
 
+    h2 {
+      font-weight: 500;
+    }
+
+    p {
+      font-weight: 300;
+    }
+    .container{
+      margin: auto;
+      max-width: 300px;
+      form
+      {
+
+        &:focus{
+          button
+          {
+            background-color: black;
+          }
+        }
       }
     }
   }
