@@ -11,5 +11,3 @@ body {
   body div#app .container {
     margin: auto;
     max-width: 300px; }
-    body div#app .container form:focus button {
-      background-color: black; }

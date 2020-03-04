@@ -15,19 +15,23 @@ class Form extends Component {
             avatarUrl:"",
             repoItems:[],
             resultFound:true,
+            repoItemsMapByTime:[],
+            theme:'white'
         };
         this.handleSearchApi= this.handleSearchApi.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.nameInput=React.createRef();
+        this.focusTextInput = this.focusTextInput.bind(this);
     }
     componentDidMount() {
         eva.replace();
 
     }
-    componentDidUpdate() {
-        eva.replace();
-
+    focusTextInput() {
+        eva.replace({
+            fill:'black'
+        });
     }
-
     handleChange(event) {
 
         const { value } = event.target;
@@ -43,72 +47,70 @@ class Form extends Component {
         this.setState({wait:true});
         let userName=this.state.searchQuery.replace('@', '');
         axios.get('https://api.github.com/users/'+userName).then((result)=> {
+            this.setState({resultFound:true});
             this.setState({fullName:result.data.name});
             this.setState({company: result.data.company});
             this.setState({location: result.data.location});
             this.setState({blog: result.data.blog});
             this.setState({avatarUrl:result.data.avatar_url});
             axios.get('https://api.github.com/users/'+userName+"/repos").then((result)=> {
-                let listItems = result.data.map((item,i) =>{
-                    debugger;
-                    if(item.fork) {
+                let notForkedRepoItems = result.data.map((item,i) =>{
                         let forkedLink =<React.Fragment/>;
+
+                        if(!item.fork)
+                        {
+                            return (
+                                <ul key={i}>
+                                    <li>{item.name}</li>
+                                    {item.description ? <li>{item.description}</li> : <React.Fragment/>}
+                                    {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
+                                        <React.Fragment/>}
+                                    <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
+                                    <li><i data-eva="copy-outline"></i>{item.forks}</li>
+                                </ul>
+                            );
+                        }
+                });
+                result.data.map((item,i) => {
+                    if (item.fork) {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name).then((repo) => {
-                            debugger;
-                            console.log(repo.data.source.owner.login);
-                            forkedLink =  <a href="#">{'@' + repo.data.source.owner.login}</a>;
-                            return( <ul key={i}>
+                            this.setState({wait:false});
+                            let forkedItem=(<ul key={i}>
                                 <li>{item.name}</li>
-                                <li>{'Forked from '+ forkedLink}</li>
-                                {item.description? <li>{item.description}</li>:<React.Fragment/>}
-                                {item.language?<li><i data-eva="code-outline"></i>{item.language}</li>:<React.Fragment/>}
+                                <li>{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login}>{'@'+ repo.data.source.owner.login}</a></li>
+                                {item.description ? <li>{item.description}</li> : <React.Fragment/>}
+                                {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
+                                    <React.Fragment/>}
                                 <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
                                 <li><i data-eva="copy-outline"></i>{item.forks}</li>
                             </ul>);
+                            this.setState({ repoItems: [...this.state.repoItems, forkedItem] });
 
+                            if(i==result.data.length-1)
+                            {
+                                this.setState({repoItems:forkedItems});
+                            }
 
-                        }).catch((error)=> {
+                        }).catch((error) => {
                             // handle error
                             console.log(error);
-                            return( <ul key={i}>
-                                <li>{item.name}</li>
-                                <li>{'Forked from '+ forkedLink}</li>
-                                {item.description? <li>{item.description}</li>:<React.Fragment/>}
-                                {item.language?<li><i data-eva="code-outline"></i>{item.language}</li>:<React.Fragment/>}
-                                <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
-                                <li><i data-eva="copy-outline"></i>{item.forks}</li>
-                            </ul>);
                         });
 
                     }
-                    else{
-                        return(
-                            <ul key={i}>
-                                <li>{item.name}</li>
-                                {item.description? <li>{item.description}</li>:<React.Fragment/>}
-                                {item.language?<li><i data-eva="code-outline"></i>{item.language}</li>:<React.Fragment/>}
-                                <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
-                                <li><i data-eva="copy-outline"></i>{item.forks}</li>
-                            </ul>
-                        );
-                    }
-
-
-
                 });
-                this.setState({repoItems:listItems});
-                this.setState({wait:false});
-                this.setState({resultFound:true});
+                this.setState({repoItems:notForkedRepoItems});
+
+
             }).catch((error)=> {
                 // handle error
                 console.log(error);
-                this.setState({resultFound:false});
-                this.setState({errorMessage:'User not found :('})
-                this.setState({wait:false});
+
             });
         }).catch((error)=> {
             // handle error
-            console.log(error);
+            this.setState({resultFound:false});
+            this.setState({errorMessage:'User not found :('})
+            this.setState({wait:false});
         });
 
         console.log(this.state);
@@ -130,6 +132,8 @@ class Form extends Component {
                         value={this.state.value}
                         onChange={this.handleChange}
                         placeholder={'@username'}
+                               ref={this.nameInput}
+                               onClick={this.focusTextInput}
                         />
                         <button type="submit">
                             <i data-eva="search-outline"></i>
@@ -137,18 +141,19 @@ class Form extends Component {
                     </form>
                     <br/>
 
-                        {this.state.resultFound?  <div className="row"> <img src={this.state.avatarUrl} alt=""/>
-
+                        {this.state.resultFound? <div className="row">
+                            <img src={this.state.avatarUrl} alt=""/>
                             <br/>
                             <p>{this.state.fullName?'name: '+this.state.fullName:""}</p><br/>
                             <p>{this.state.company?('company: '+this.state.company):""}</p><br/>
                             <p>{this.state.location?('location: '+this.state.location):""}</p><br/>
-                            {this.state.blog? <p>{'blog: '}<a href="#">{this.state.blog}</a></p>:<React.Fragment/>}
-                            {this.state.repoItems}</div>:<p style={{color:'red'}}>{this.state.errorMessage}</p>}
+                            {this.state.blog? <p>{'blog: '}<a href={'https://'+this.state.blog}>{this.state.blog}</a></p>:<React.Fragment/>}
+                            {this.state.repoItems}</div>:
+                            <p style={{color:'red'}}>{this.state.errorMessage}</p>}
 
-                </div>
+            </div>
 
-    );
+        );
     }
 }
 
