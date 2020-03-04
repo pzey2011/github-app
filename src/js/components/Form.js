@@ -13,24 +13,31 @@ class Form extends Component {
             company:"",
             blog:"",
             avatarUrl:"",
-            repoItems:[],
+            repoDivItemsMap:[],
             resultFound:true,
-            repoItemsMapByTime:[],
-            theme:'white'
+            theme:'white',
+            inputFocused:false,
         };
         this.handleSearchApi= this.handleSearchApi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.nameInput=React.createRef();
-        this.focusTextInput = this.focusTextInput.bind(this);
+        this.submitButton=React.createRef();
+        this.focusNameInput = this.focusNameInput.bind(this);
     }
     componentDidMount() {
-        eva.replace();
+        eva.replace({
+            width:18,
+            height:18,
+        });
 
     }
-    focusTextInput() {
-        eva.replace({
-            fill:'black'
-        });
+    componentDidUpdate() {
+        eva.replace();
+    }
+    focusNameInput() {
+        this.setState({inputFocused:true});
+        this.submitButton.current.style.backgroundColor='black';
+        this.nameInput.current.focus();
     }
     handleChange(event) {
 
@@ -53,13 +60,13 @@ class Form extends Component {
             this.setState({location: result.data.location});
             this.setState({blog: result.data.blog});
             this.setState({avatarUrl:result.data.avatar_url});
-            axios.get('https://api.github.com/users/'+userName+"/repos").then((result)=> {
-                let notForkedRepoItems = result.data.map((item,i) =>{
+            axios.get('https://api.github.com/users/'+userName+"/repos?sort=created&direction=desc").then((result)=> {
+                result.data.map((item,i) =>{
                         let forkedLink =<React.Fragment/>;
-
                         if(!item.fork)
                         {
-                            return (
+
+                             let unForkedDivItem=(
                                 <ul key={i}>
                                     <li>{item.name}</li>
                                     {item.description ? <li>{item.description}</li> : <React.Fragment/>}
@@ -68,14 +75,19 @@ class Form extends Component {
                                     <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
                                     <li><i data-eva="copy-outline"></i>{item.forks}</li>
                                 </ul>
-                            );
+                            )
+                            let repoDivItemMap= {
+                                updatedAt: item.updated_at,
+                                divItem: unForkedDivItem
+                            }
+                            this.setState({ repoDivItemsMap: [...this.state.repoDivItemsMap, repoDivItemMap] });
                         }
                 });
                 result.data.map((item,i) => {
                     if (item.fork) {
-                        axios.get('https://api.github.com/repos/' + userName + "/" + item.name).then((repo) => {
+                        axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
-                            let forkedItem=(<ul key={i}>
+                            let forkedDivItem=(<ul key={i}>
                                 <li>{item.name}</li>
                                 <li>{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login}>{'@'+ repo.data.source.owner.login}</a></li>
                                 {item.description ? <li>{item.description}</li> : <React.Fragment/>}
@@ -84,12 +96,17 @@ class Form extends Component {
                                 <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
                                 <li><i data-eva="copy-outline"></i>{item.forks}</li>
                             </ul>);
-                            this.setState({ repoItems: [...this.state.repoItems, forkedItem] });
 
-                            if(i==result.data.length-1)
-                            {
-                                this.setState({repoItems:forkedItems});
+                            let repoDivItemMap= {
+                                updatedAt: item.updated_at,
+                                divItem: forkedDivItem
                             }
+                            this.setState({ repoDivItemsMap: [...this.state.repoDivItemsMap, repoDivItemMap] });
+                            debugger;
+                            this.state.repoDivItemsMap.sort(function(a,b){
+                                return new Date(b.updatedAt) - new Date(a.updatedAt);
+                            });
+                            debugger;
 
                         }).catch((error) => {
                             // handle error
@@ -98,7 +115,6 @@ class Form extends Component {
 
                     }
                 });
-                this.setState({repoItems:notForkedRepoItems});
 
 
             }).catch((error)=> {
@@ -116,6 +132,11 @@ class Form extends Component {
         console.log(this.state);
     }
     render() {
+        let repoDivItems = this.state.repoDivItemsMap.map((item,i) => {
+            if(i<4)
+                return item.divItem;
+        });
+
         return (
             <div className="container">
                 <h1>GitHub Profiles</h1>
@@ -132,11 +153,11 @@ class Form extends Component {
                         value={this.state.value}
                         onChange={this.handleChange}
                         placeholder={'@username'}
-                               ref={this.nameInput}
-                               onClick={this.focusTextInput}
+                       ref={this.nameInput}
+                       onClick={this.focusNameInput}
                         />
-                        <button type="submit">
-                            <i data-eva="search-outline"></i>
+                        <button type="submit" ref={this.submitButton} style={{backgroundColor:'white'}}>
+                            <i data-eva="search-outline" data-eva-fill={!this.state.inputFocused?"black":'white'}></i>
                         </button>
                     </form>
                     <br/>
@@ -148,7 +169,7 @@ class Form extends Component {
                             <p>{this.state.company?('company: '+this.state.company):""}</p><br/>
                             <p>{this.state.location?('location: '+this.state.location):""}</p><br/>
                             {this.state.blog? <p>{'blog: '}<a href={'https://'+this.state.blog}>{this.state.blog}</a></p>:<React.Fragment/>}
-                            {this.state.repoItems}</div>:
+                            {repoDivItems}</div>:
                             <p style={{color:'red'}}>{this.state.errorMessage}</p>}
 
             </div>
