@@ -98,12 +98,12 @@ class Form extends Component {
                         {
                              let unForkedDivItem=(
                                 <ul className="block">
-                                    <li className="extra-bold"><a href={item.html_url}>{item.name}</a></li>
+                                    <li className="extra-bold"><a href={item.html_url} target="_blank">{item.name}</a></li>
                                     {item.description ? <li>{item.description}</li> : <React.Fragment/>}
                                     <li>
                                     {item.language ? <React.Fragment><i data-eva="code-outline"></i>{item.language}</React.Fragment> :
                                         <React.Fragment/>}
-                                    <React.Fragment><i data-eva="star-outline"></i>{item.stargazers_count}</React.Fragment>
+                                        <React.Fragment><i data-eva="star-outline"></i>{item.stargazers_count}</React.Fragment>
                                         <React.Fragment><i data-eva="copy-outline"></i>{item.forks}</React.Fragment></li>
                                 </ul>
                             )
@@ -119,13 +119,13 @@ class Form extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
                             let forkedDivItem=(<ul className="block">
-                                <li className="extra-bold"><a href={item.html_url}>{item.name}</a></li>
-                                <li>{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login}>{'@'+ repo.data.source.owner.login}</a></li>
+                                <li className="extra-bold"><a href={item.html_url} target="_blank">{item.name}</a>
+                                {'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login} target="_blank">{'@'+ repo.data.source.owner.login}</a></li>
                                 {item.description ? <li>{item.description}</li> : <React.Fragment/>}
-                                {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
+                                <li>{item.language ? <React.Fragment><i data-eva="code-outline"></i>{item.language}</React.Fragment> :
                                     <React.Fragment/>}
-                                <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
-                                <li><i data-eva="copy-outline"></i>{item.forks}</li>
+                                <i data-eva="star-outline"></i>{item.stargazers_count}
+                                <i data-eva="copy-outline"></i>{item.forks}</li>
                             </ul>);
 
                             let repoDivItemMap= {
@@ -199,7 +199,7 @@ class Form extends Component {
                                 {this.state.fullName?<React.Fragment><p className="extra-bold">{this.state.fullName}</p></React.Fragment>:<React.Fragment/>}
                             {this.state.company?<React.Fragment><p>{'company: '+this.state.company}</p></React.Fragment>:<React.Fragment/>}
                             {this.state.location?<React.Fragment><p>{'location: '+this.state.location}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.blog? <p>{'blog: '}<a href={this.state.blog}>{this.state.blogName}</a></p>:<React.Fragment/>}
+                            {this.state.blog? <p>{'blog: '}<a href={this.state.blog} target="_blank">{this.state.blogName}</a></p>:<React.Fragment/>}
                             {repoDivItems}</div>:
                             <p style={{color:'red'}}>{this.state.errorMessage}</p>}
 

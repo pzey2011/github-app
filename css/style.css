@@ -16,6 +16,13 @@ body {
   body div#app .container {
     margin: auto;
     max-width: 300px; }
+    body div#app .container .row img {
+      width: 240px;
+      height: 240px; }
+    body div#app .container .row ul li a {
+      font-size: 14px; }
+    body div#app .container .row ul li p {
+      font-size: 12px; }
     body div#app .container h1 {
       font-weight: 900;
       font-size: 28px; }
