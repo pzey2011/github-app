@@ -4,6 +4,12 @@ html {
 a {
   text-decoration: none; }
 
+.block {
+  background-color: #FAFAFA; }
+
+ul {
+  list-style-type: none; }
+
 body {
   background-color: #fff;
   font-style: normal; }

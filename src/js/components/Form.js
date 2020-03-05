@@ -25,6 +25,7 @@ class Form extends Component {
         this.submitButton=React.createRef();
         this.focusNameInput = this.focusNameInput.bind(this);
         this.getUrlHostName=this.getUrlHostName.bind(this);
+        this.reset=this.reset.bind(this);
     }
     componentDidMount() {
         eva.replace({
@@ -33,12 +34,20 @@ class Form extends Component {
         });
 
     }
-    componentDidUpdate() {
-        eva.replace();
+    reset(){
+        this.setState({fullName:"",
+            location:"",
+            company:"",
+            blog:"",
+            blogName:"",
+            avatarUrl:"",
+            repoDivItemsMap:[],
+            resultFound:true,
+            theme:'white',
+            inputFocused:false});
     }
     focusNameInput() {
         this.setState({inputFocused:true});
-        this.submitButton.current.style.backgroundColor='black';
         this.nameInput.current.focus();
     }
     handleChange(event) {
@@ -68,6 +77,9 @@ class Form extends Component {
     }
     handleSearchApi(event){
         event.preventDefault();
+        ///reset state
+        this.reset();
+        /////
         this.setState({wait:true});
         let userName=this.state.searchQuery.replace('@', '');
         axios.get('https://api.github.com/users/'+userName).then((result)=> {
@@ -76,7 +88,6 @@ class Form extends Component {
             this.setState({company: result.data.company});
             this.setState({location: result.data.location});
             this.setState({blog: result.data.blog});
-            debugger;
             let hostName=this.getUrlHostName(result.data.blog);
             this.setState({blogName: hostName});
             this.setState({avatarUrl:result.data.avatar_url});
@@ -85,15 +96,15 @@ class Form extends Component {
                         let forkedLink =<React.Fragment/>;
                         if(!item.fork)
                         {
-
                              let unForkedDivItem=(
-                                <ul key={i}>
-                                    <li className="extra-bold">{item.name}</li>
+                                <ul className="block">
+                                    <li className="extra-bold"><a href={item.html_url}>{item.name}</a></li>
                                     {item.description ? <li>{item.description}</li> : <React.Fragment/>}
-                                    {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
+                                    <li>
+                                    {item.language ? <React.Fragment><i data-eva="code-outline"></i>{item.language}</React.Fragment> :
                                         <React.Fragment/>}
-                                    <li><i data-eva="star-outline"></i>{item.stargazers_count}</li>
-                                    <li><i data-eva="copy-outline"></i>{item.forks}</li>
+                                    <React.Fragment><i data-eva="star-outline"></i>{item.stargazers_count}</React.Fragment>
+                                        <React.Fragment><i data-eva="copy-outline"></i>{item.forks}</React.Fragment></li>
                                 </ul>
                             )
                             let repoDivItemMap= {
@@ -107,8 +118,8 @@ class Form extends Component {
                     if (item.fork) {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
-                            let forkedDivItem=(<ul key={i}>
-                                <li className="extra-bold">{item.name}</li>
+                            let forkedDivItem=(<ul className="block">
+                                <li className="extra-bold"><a href={item.html_url}>{item.name}</a></li>
                                 <li>{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login}>{'@'+ repo.data.source.owner.login}</a></li>
                                 {item.description ? <li>{item.description}</li> : <React.Fragment/>}
                                 {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
@@ -125,7 +136,9 @@ class Form extends Component {
                             this.state.repoDivItemsMap.sort(function(a,b){
                                 return new Date(b.updatedAt) - new Date(a.updatedAt);
                             });
-
+                            if(this.state.repoDivItemsMap.length==result.data.length){
+                                eva.replace();
+                            }
                         }).catch((error) => {
                             // handle error
                             console.log(error);

@@ -5,6 +5,12 @@ html{
 a{
   text-decoration: none;
 }
+.block{
+  background-color: #FAFAFA;
+}
+ul {
+  list-style-type: none;
+}
 body{
   background-color: $color;
   font-style: normal;
