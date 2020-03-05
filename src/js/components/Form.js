@@ -12,6 +12,7 @@ class Form extends Component {
             location:"",
             company:"",
             blog:"",
+            blogName:"",
             avatarUrl:"",
             repoDivItemsMap:[],
             resultFound:true,
@@ -23,6 +24,7 @@ class Form extends Component {
         this.nameInput=React.createRef();
         this.submitButton=React.createRef();
         this.focusNameInput = this.focusNameInput.bind(this);
+        this.getUrlHostName=this.getUrlHostName.bind(this);
     }
     componentDidMount() {
         eva.replace({
@@ -49,6 +51,21 @@ class Form extends Component {
             };
         });
     }
+    getUrlHostName(url){
+        let hostname="";
+        if (url.indexOf("//") > -1) {
+            hostname = url.split('/')[2];
+        }
+        else {
+            hostname = url.split('/')[0];
+        }
+
+        //find & remove port number
+        hostname = hostname.split(':')[0];
+        //find & remove "?"
+        hostname = hostname.split('?')[0];
+        return hostname;
+    }
     handleSearchApi(event){
         event.preventDefault();
         this.setState({wait:true});
@@ -59,6 +76,9 @@ class Form extends Component {
             this.setState({company: result.data.company});
             this.setState({location: result.data.location});
             this.setState({blog: result.data.blog});
+            debugger;
+            let hostName=this.getUrlHostName(result.data.blog);
+            this.setState({blogName: hostName});
             this.setState({avatarUrl:result.data.avatar_url});
             axios.get('https://api.github.com/users/'+userName+"/repos?sort=created&direction=desc").then((result)=> {
                 result.data.map((item,i) =>{
@@ -68,7 +88,7 @@ class Form extends Component {
 
                              let unForkedDivItem=(
                                 <ul key={i}>
-                                    <li>{item.name}</li>
+                                    <li className="extra-bold">{item.name}</li>
                                     {item.description ? <li>{item.description}</li> : <React.Fragment/>}
                                     {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
                                         <React.Fragment/>}
@@ -88,7 +108,7 @@ class Form extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
                             let forkedDivItem=(<ul key={i}>
-                                <li>{item.name}</li>
+                                <li className="extra-bold">{item.name}</li>
                                 <li>{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login}>{'@'+ repo.data.source.owner.login}</a></li>
                                 {item.description ? <li>{item.description}</li> : <React.Fragment/>}
                                 {item.language ? <li><i data-eva="code-outline"></i>{item.language}</li> :
@@ -102,11 +122,9 @@ class Form extends Component {
                                 divItem: forkedDivItem
                             }
                             this.setState({ repoDivItemsMap: [...this.state.repoDivItemsMap, repoDivItemMap] });
-                            debugger;
                             this.state.repoDivItemsMap.sort(function(a,b){
                                 return new Date(b.updatedAt) - new Date(a.updatedAt);
                             });
-                            debugger;
 
                         }).catch((error) => {
                             // handle error
@@ -163,12 +181,12 @@ class Form extends Component {
                     <br/>
 
                         {this.state.resultFound? <div className="row">
-                            <img src={this.state.avatarUrl} alt=""/>
-                            <br/>
-                            <p>{this.state.fullName?'name: '+this.state.fullName:""}</p><br/>
-                            <p>{this.state.company?('company: '+this.state.company):""}</p><br/>
-                            <p>{this.state.location?('location: '+this.state.location):""}</p><br/>
-                            {this.state.blog? <p>{'blog: '}<a href={'https://'+this.state.blog}>{this.state.blog}</a></p>:<React.Fragment/>}
+                                <img src={this.state.avatarUrl} alt=""/>
+                                <br/>
+                                {this.state.fullName?<React.Fragment><p className="extra-bold">{this.state.fullName}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.company?<React.Fragment><p>{'company: '+this.state.company}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.location?<React.Fragment><p>{'location: '+this.state.location}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.blog? <p>{'blog: '}<a href={this.state.blog}>{this.state.blogName}</a></p>:<React.Fragment/>}
                             {repoDivItems}</div>:
                             <p style={{color:'red'}}>{this.state.errorMessage}</p>}
 

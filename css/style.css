@@ -1,13 +1,28 @@
+html {
+  font-family: 'M PLUS Rounded 1c'; }
+
+a {
+  text-decoration: none; }
+
 body {
   background-color: #fff;
-  font-family: "M PLUS Rounded 1c script=all rev=2", "Adobe Blank";
   font-style: normal; }
-  body div#app h1 {
-    font-weight: 900; }
-  body div#app h2 {
-    font-weight: 500; }
-  body div#app p {
-    font-weight: 300; }
   body div#app .container {
     margin: auto;
     max-width: 300px; }
+    body div#app .container h1 {
+      font-weight: 900;
+      font-size: 28px; }
+    body div#app .container h2 {
+      font-weight: 800;
+      font-size: 21px; }
+    body div#app .container .extra-bold {
+      font-weight: 800; }
+    body div#app .container p, body div#app .container .medium {
+      font-weight: 500; }
+    body div#app .container form label {
+      font-weight: 500;
+      font-size: 14px; }
+    body div#app .container form input::placeholder {
+      font-weight: 500;
+      font-size: 14px; }

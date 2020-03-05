@@ -1,28 +1,42 @@
 $color : #fff;
-
+html{
+  font-family: 'M PLUS Rounded 1c';
+}
+a{
+  text-decoration: none;
+}
 body{
   background-color: $color;
-  font-family: "M PLUS Rounded 1c script=all rev=2", "Adobe Blank";
   font-style: normal;
   div#app {
-    h1 {
-      font-weight: 900;
-    }
 
-    h2 {
-      font-weight: 500;
-    }
-
-    p {
-      font-weight: 300;
-    }
     .container{
       margin: auto;
       max-width: 300px;
+      h1{
+        font-weight: 900;
+        font-size: 28px;
+      }
+
+      h2 {
+        font-weight: 800;
+        font-size: 21px;
+      }
+      .extra-bold {
+        font-weight: 800;
+      }
+      p,.medium{
+        font-weight: 500;
+      }
       form
       {
-        input{
-
+        label{
+          font-weight: 500;
+          font-size: 14px;
+        }
+        input::placeholder{
+          font-weight: 500;
+          font-size: 14px;
         }
 
       }
