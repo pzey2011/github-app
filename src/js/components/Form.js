@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
+import ls from 'local-storage';
 
 class Form extends Component {
     constructor() {
@@ -16,23 +17,75 @@ class Form extends Component {
             avatarUrl:"",
             repoDivItemsMap:[],
             resultFound:true,
-            theme:'white',
+            theme:'',
             inputFocused:false,
         };
         this.handleSearchApi= this.handleSearchApi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.nameInput=React.createRef();
         this.submitButton=React.createRef();
+        this.themeToggleIcon=React.createRef();
+        this.themeToggleIconDiv=React.createRef();
         this.focusNameInput = this.focusNameInput.bind(this);
         this.getUrlHostName=this.getUrlHostName.bind(this);
         this.reset=this.reset.bind(this);
+        this.toggleTheme=this.toggleTheme.bind(this);
     }
     componentDidMount() {
+        if(!ls.get('theme'))
+        {
+            ls.set('theme','light');
+            this.setState({theme:'light'});
+        }
+        else{
+
+            if(ls.get('theme')=='light')
+            {
+                this.setState({theme:'light'});
+                this.themeToggleIcon.current.setAttribute("data-eva", "moon");
+
+            }
+            else{
+                this.setState({theme:'dark'});
+                this.themeToggleIcon.current.setAttribute("data-eva", "sun-outline");
+                this.themeToggleIcon.current.setAttribute("data-eva-fill", "#fff");
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
         eva.replace({
             width:18,
             height:18,
         });
 
+    }
+    toggleTheme(){
+        if(this.state.theme=='dark')
+        {
+            this.themeToggleIconDiv.current.removeChild(document.getElementsByClassName("eva-sun-outline")[0]);
+            let newIcon = document.createElement("i");
+            newIcon.setAttribute("data-eva", "moon");
+            this.themeToggleIconDiv.current.append(newIcon);
+            eva.replace({
+                width:18,
+                height:18});
+            ls.set('theme','light');
+            this.setState({theme:'light'});
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+        else{
+            this.themeToggleIconDiv.current.removeChild(document.getElementsByClassName("eva-moon")[0]);
+            let newIcon = document.createElement("i");
+            newIcon.setAttribute("data-eva", "sun-outline");
+            newIcon.setAttribute("data-eva-fill", "#fff");
+            this.themeToggleIconDiv.current.append(newIcon);
+            eva.replace({
+                width:18,
+                height:18});
+            ls.set('theme','dark');
+            this.setState({theme:'dark'});
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
     }
     reset(){
         this.setState({fullName:"",
@@ -43,7 +96,6 @@ class Form extends Component {
             avatarUrl:"",
             repoDivItemsMap:[],
             resultFound:true,
-            theme:'white',
             inputFocused:false});
     }
     focusNameInput() {
@@ -113,10 +165,10 @@ class Form extends Component {
                                     <li className="extra-bold"><a href={item.html_url} className='title' target="_blank">{item.name}</a></li>
                                     {item.description ? <li className="description">{item.description}</li> : <React.Fragment/>}
                                     <li className="item-container">
-                                    {item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
+                                    {item.language ? <div className="icon-item medium"><i data-eva="code-outline"></i><p className="language">{item.language}</p></div> :
                                         <React.Fragment/>}
-                                        <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
-                                        <div className="item medium"><i data-eva="copy-outline"></i>{item.forks}</div></li>
+                                        <div className="icon-item medium"><i data-eva="star"></i><p className="star">{item.stargazers_count}</p></div>
+                                        <div className="icon-item medium"><i data-eva="copy"></i><p className="copy">{item.forks}</p></div></li>
                                 </ul>
                             )
                             let repoDivItemMap= {
@@ -131,12 +183,12 @@ class Form extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             let forkedDivItem=(<ul className="block">
                                 <li className="item-container" ><a href={item.html_url} target="_blank" className="item title extra-bold">{item.name}</a>
-                                    <a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium">{'Forked from @'+ repo.data.source.owner.login}</a></li>
+                                    <p className="item medium forked">{'Forked from @'}</p><a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium">{repo.data.source.owner.login}</a></li>
                                 {item.description ? <li className="description">{item.description}</li> : <React.Fragment/>}
-                                <li className="item-container">{item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
+                                <li className="item-container">{item.language ? <div className="icon-item medium"><i data-eva="code-outline"></i><p className="language">{item.language}</p></div> :
                                     <React.Fragment/>}
-                                    <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
-                                    <div className="item medium"><i data-eva="copy-outline"></i>{item.forks}</div></li>
+                                    <div className="icon-item medium"><i data-eva="star"></i><p className="star">{item.stargazers_count}</p></div>
+                                    <div className="icon-item  medium"><i data-eva="copy"></i><p className="copy">{item.forks}</p></div></li>
                             </ul>);
 
                             let repoDivItemMap= {
@@ -218,9 +270,11 @@ class Form extends Component {
         );
         return (
             <div className="container">
-                <h1>GitHub Profiles</h1>
-                <h2>Enter a GitHub username,
-                    to see the magic.</h2>
+                <div className="container-2">
+                    <div className="theme-icon-div" ref={this.themeToggleIconDiv} onClick={this.toggleTheme}><i className="theme-icon" data-eva={this.state.theme=='light'?"moon":"sun-outline"} ref={this.themeToggleIcon} data-eva-fill="#212121" ></i></div>
+                    <h1>GitHub Profiles</h1>
+                    <h2>Enter a GitHub username,
+                        to see the magic.</h2>
                     <form className="search-form" onSubmit={this.handleSearchApi}>
                         <label htmlFor="username">GitHub username:</label>
 
@@ -243,13 +297,13 @@ class Form extends Component {
 
                         {this.state.resultFound? <div className="row"><div className="column-info">
                                 {this.state.wait?<div className="img-block"></div>:(this.state.avatarUrl)?<img className="img-block" src={this.state.avatarUrl} alt=""/>:<React.Fragment/>}
-                                {this.state.wait?<div className="fullname-block"></div>:(this.state.fullName)?<React.Fragment><p className="fullname-block extra-bold">{this.state.fullName}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="company-block"></div>:(this.state.company)?<React.Fragment><p className="company-block">{'Company: '+this.state.company}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="location-block"></div>:(this.state.location)?<React.Fragment><p className="location-block">{'Location: '+this.state.location}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="blog-block"></div>:(this.state.blog)? <p>{'Website: '}<a href={this.state.blog} target="_blank">{this.state.blogName}</a></p>:<React.Fragment/>}
+                                {this.state.wait?<div className="fullname-block"></div>:(this.state.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.state.fullName}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="company-block"></div>:(this.state.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.state.company}</p></div></React.Fragment>:<React.Fragment/>}
+                                {this.state.wait?<div className="location-block"></div>:(this.state.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.state.location}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="blog-block"></div>:(this.state.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.state.blog} target="_blank">{this.state.blogName}</a></div>:<React.Fragment/>}
                             </div> <div className="column-repos"><div className="column-1">{this.state.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.state.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
                             <p className="error-message extra-bold">{this.state.errorMessage}</p>}
-
+                </div>
             </div>
 
         );

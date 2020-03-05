@@ -1,31 +1,53 @@
-$color : #fff;
-$block-color : #FAFAFA;
+:root {
+  --body-color: #fff;
+  --block-color: #FAFAFA;
+  --button-color: #212121;
+  --value-font-color: #000;
+  --key-font-color: #A8A8A8;
+  --small-icon-color: #A8A8A8;
+}
+[data-theme="dark"]{
+  --body-color: #212121;
+  --block-color: #292929;
+  --button-color: #fff;
+  --value-font-color: #fff;
+  --key-font-color: #656565;
+  --small-icon-color: #656565;
+}
 html{
   font-family: 'M PLUS Rounded 1c';
 }
 
 body{
-  background-color: $color;
+  background-color: var(--body-color);
   font-style: normal;
   div#app {
     .container{
-      max-width: 300px;
-      margin: 80px auto auto 350px;
-
+      position: relative;
+      margin: 80px 350px 229px 297px;
+      .theme-icon-div{
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
       h1{
         margin-bottom: 122px;
+        color: var(--value-font-color);
       }
       h2{
         margin-bottom: 48px;
+        color: var(--value-font-color);
       }
-      .row{
+
+      .row {
         margin-top: 80px;
         display: flex;
+
         div.column-info {
           img.img-block {
             width: 240px;
             height: 240px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 8px;
             margin-bottom: 34px;
           }
@@ -33,7 +55,7 @@ body{
           div.img-block {
             width: 240px;
             height: 240px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 8px;
             margin-bottom: 34px;
           }
@@ -41,7 +63,7 @@ body{
           div.fullname-block {
             width: 220px;
             height: 18px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 4px;
             margin-bottom: 16px;
           }
@@ -49,36 +71,56 @@ body{
           div.company-block {
             width: 132px;
             height: 11px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 4px;
             margin-bottom: 16px;
           }
+
           div.location-block {
             width: 145px;
             height: 11px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 4px;
             margin-bottom: 16px;
           }
-          p.location-block,p.company-block,p.fullname-block {
+
+          div.location-p-block, div.company-p-block, div.fullname-p-block {
             margin-bottom: 16px;
+            display: flex;
           }
+
+          div.blog-p-block {
+            display: flex;
+            align-items: center;
+          }
+
+          p.location-key, p.company-key, p.fullname-key, p.blog-key {
+            color: var(--key-font-color);
+            margin-right: 9px;
+          }
+          p.location-value, p.company-value, p.fullname-value {
+            color: var(--value-font-color);
+          }
+
           div.blog-block {
             width: 116px;
             height: 11px;
-            background-color: $block-color;
+            background-color: var(--block-color);
             border-radius: 4px;
           }
         }
-        div.column-repos{
+
+        div.column-repos {
           display: flex;
           margin-left: 69px;
-          .column-2{
+
+          .column-2 {
             margin-left: 16px;
           }
-          div.column-1,div.column-2 {
+
+          div.column-1, div.column-2 {
             ul.block {
-              background-color: $block-color;
+              background-color: var(--block-color);
               width: 396px;
               height: 113px;
               padding: 16px 66px 16px 24px;
@@ -88,17 +130,22 @@ body{
                 margin-top: 10px;
                 margin-bottom: 18px;
                 font-size: 12px;
+                color: var(--value-font-color);
               }
 
               li.item-container {
                 display: flex;
                 align-items: center;
-
-                .item:first-child {
+                .forked{
+                  padding-right: 0px;
+                  padding-left: 0px;
+                  color: var(--value-font-color);
+                }
+                .icon-item:first-child {
                   padding-left: 0px;
                 }
 
-                .item:last-child {
+                .icon-item:last-child {
                   padding-right: 0px;
                 }
               }
@@ -108,14 +155,21 @@ body{
                   font-size: 14px;
                 }
 
-                .item {
+                .icon-item {
                   display: flex;
                   padding: 0 15px 0 15px;
+                  .language,.star,.copy{
+                    color: var(--value-font-color);
+                  }
+                  svg {
+                    fill: var(--small-icon-color);
+                  }
                 }
 
-                .item.medium {
+                .item.medium,.icon-item.medium {
                   font-size: 12px;
                 }
+
 
                 a.title {
                   font-size: 14px;
@@ -127,46 +181,50 @@ body{
         }
       }
 
-      form.search-form
-      {
-        label{
+      form.search-form {
+        label {
           font-weight: 500;
           font-size: 14px;
+          color: var(--value-font-color);
         }
-        .form-group{
+
+        .form-group {
           display: flex;
           margin-top: 16px;
-          button{
-            background-color: #212121;
+
+          button {
+            background-color: var(--button-color);
             border-radius: 8px;
             border: none;
             outline: none;
             padding: 16px;
-            svg{
-              fill: #FFFFFF;
+
+            svg {
+              fill: var(--body-color);
               width: 18px;
               height: 18px;
             }
           }
-          input{
+
+          input {
             width: 293px;
             border: none;
             outline: none;
-            background-color: #FAFAFA;
+            background-color: var(--block-color);
             font-family: 'M PLUS Rounded 1c';
             padding: 17px 0px 17px 16px;
             border-radius: 8px;
-            &::placeholder{
+            color: var(--value-font-color);
+
+            &::placeholder {
               font-weight: 500;
               font-size: 14px;
               font-family: 'M PLUS Rounded 1c';
+              color: var(--value-font-color);
             }
 
           }
         }
-
-
-
       }
     }
   }
@@ -198,5 +256,8 @@ body{
 
   ul {
     list-style-type: none;
+  }
+  p{
+    margin: 0;
   }
 }

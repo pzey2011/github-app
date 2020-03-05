@@ -1,55 +1,86 @@
+:root {
+  --body-color: #fff;
+  --block-color: #FAFAFA;
+  --button-color: #212121;
+  --value-font-color: #000;
+  --key-font-color: #A8A8A8;
+  --small-icon-color: #A8A8A8; }
+
+[data-theme="dark"] {
+  --body-color: #212121;
+  --block-color: #292929;
+  --button-color: #fff;
+  --value-font-color: #fff;
+  --key-font-color: #656565;
+  --small-icon-color: #656565; }
+
 html {
   font-family: 'M PLUS Rounded 1c'; }
 
 body {
-  background-color: #fff;
+  background-color: var(--body-color);
   font-style: normal; }
   body div#app .container {
-    max-width: 300px;
-    margin: 80px auto auto 350px; }
+    position: relative;
+    margin: 80px 350px 229px 297px; }
+    body div#app .container .theme-icon-div {
+      position: absolute;
+      top: 0px;
+      right: 0px; }
     body div#app .container h1 {
-      margin-bottom: 122px; }
+      margin-bottom: 122px;
+      color: var(--value-font-color); }
     body div#app .container h2 {
-      margin-bottom: 48px; }
+      margin-bottom: 48px;
+      color: var(--value-font-color); }
     body div#app .container .row {
       margin-top: 80px;
       display: flex; }
       body div#app .container .row div.column-info img.img-block {
         width: 240px;
         height: 240px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 8px;
         margin-bottom: 34px; }
       body div#app .container .row div.column-info div.img-block {
         width: 240px;
         height: 240px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 8px;
         margin-bottom: 34px; }
       body div#app .container .row div.column-info div.fullname-block {
         width: 220px;
         height: 18px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 4px;
         margin-bottom: 16px; }
       body div#app .container .row div.column-info div.company-block {
         width: 132px;
         height: 11px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 4px;
         margin-bottom: 16px; }
       body div#app .container .row div.column-info div.location-block {
         width: 145px;
         height: 11px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 4px;
         margin-bottom: 16px; }
-      body div#app .container .row div.column-info p.location-block, body div#app .container .row div.column-info p.company-block, body div#app .container .row div.column-info p.fullname-block {
-        margin-bottom: 16px; }
+      body div#app .container .row div.column-info div.location-p-block, body div#app .container .row div.column-info div.company-p-block, body div#app .container .row div.column-info div.fullname-p-block {
+        margin-bottom: 16px;
+        display: flex; }
+      body div#app .container .row div.column-info div.blog-p-block {
+        display: flex;
+        align-items: center; }
+      body div#app .container .row div.column-info p.location-key, body div#app .container .row div.column-info p.company-key, body div#app .container .row div.column-info p.fullname-key, body div#app .container .row div.column-info p.blog-key {
+        color: var(--key-font-color);
+        margin-right: 9px; }
+      body div#app .container .row div.column-info p.location-value, body div#app .container .row div.column-info p.company-value, body div#app .container .row div.column-info p.fullname-value {
+        color: var(--value-font-color); }
       body div#app .container .row div.column-info div.blog-block {
         width: 116px;
         height: 11px;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         border-radius: 4px; }
       body div#app .container .row div.column-repos {
         display: flex;
@@ -57,7 +88,7 @@ body {
         body div#app .container .row div.column-repos .column-2 {
           margin-left: 16px; }
         body div#app .container .row div.column-repos div.column-1 ul.block, body div#app .container .row div.column-repos div.column-2 ul.block {
-          background-color: #FAFAFA;
+          background-color: var(--block-color);
           width: 396px;
           height: 113px;
           padding: 16px 66px 16px 24px;
@@ -65,51 +96,63 @@ body {
           body div#app .container .row div.column-repos div.column-1 ul.block li.description, body div#app .container .row div.column-repos div.column-2 ul.block li.description {
             margin-top: 10px;
             margin-bottom: 18px;
-            font-size: 12px; }
+            font-size: 12px;
+            color: var(--value-font-color); }
           body div#app .container .row div.column-repos div.column-1 ul.block li.item-container, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container {
             display: flex;
             align-items: center; }
-            body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .item:first-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .item:first-child {
+            body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .forked, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .forked {
+              padding-right: 0px;
+              padding-left: 0px;
+              color: var(--value-font-color); }
+            body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .icon-item:first-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .icon-item:first-child {
               padding-left: 0px; }
-            body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .item:last-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .item:last-child {
+            body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .icon-item:last-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .icon-item:last-child {
               padding-right: 0px; }
           body div#app .container .row div.column-repos div.column-1 ul.block li .title, body div#app .container .row div.column-repos div.column-2 ul.block li .title {
             font-size: 14px; }
-          body div#app .container .row div.column-repos div.column-1 ul.block li .item, body div#app .container .row div.column-repos div.column-2 ul.block li .item {
+          body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item {
             display: flex;
             padding: 0 15px 0 15px; }
-          body div#app .container .row div.column-repos div.column-1 ul.block li .item.medium, body div#app .container .row div.column-repos div.column-2 ul.block li .item.medium {
+            body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item .language, body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item .star, body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item .copy, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item .language, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item .star, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item .copy {
+              color: var(--value-font-color); }
+            body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item svg, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item svg {
+              fill: var(--small-icon-color); }
+          body div#app .container .row div.column-repos div.column-1 ul.block li .item.medium, body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item.medium, body div#app .container .row div.column-repos div.column-2 ul.block li .item.medium, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item.medium {
             font-size: 12px; }
           body div#app .container .row div.column-repos div.column-1 ul.block li a.title, body div#app .container .row div.column-repos div.column-2 ul.block li a.title {
             font-size: 14px; }
     body div#app .container form.search-form label {
       font-weight: 500;
-      font-size: 14px; }
+      font-size: 14px;
+      color: var(--value-font-color); }
     body div#app .container form.search-form .form-group {
       display: flex;
       margin-top: 16px; }
       body div#app .container form.search-form .form-group button {
-        background-color: #212121;
+        background-color: var(--button-color);
         border-radius: 8px;
         border: none;
         outline: none;
         padding: 16px; }
         body div#app .container form.search-form .form-group button svg {
-          fill: #FFFFFF;
+          fill: var(--body-color);
           width: 18px;
           height: 18px; }
       body div#app .container form.search-form .form-group input {
         width: 293px;
         border: none;
         outline: none;
-        background-color: #FAFAFA;
+        background-color: var(--block-color);
         font-family: 'M PLUS Rounded 1c';
         padding: 17px 0px 17px 16px;
-        border-radius: 8px; }
+        border-radius: 8px;
+        color: var(--value-font-color); }
         body div#app .container form.search-form .form-group input::placeholder {
           font-weight: 500;
           font-size: 14px;
-          font-family: 'M PLUS Rounded 1c'; }
+          font-family: 'M PLUS Rounded 1c';
+          color: var(--value-font-color); }
   body h1 {
     font-weight: 900;
     font-size: 28px; }
@@ -129,3 +172,5 @@ body {
     margin-top: 16px; }
   body ul {
     list-style-type: none; }
+  body p {
+    margin: 0; }
