@@ -1,19 +1,38 @@
 :root {
   --body-color: #fff;
   --block-color: #FAFAFA;
-  --button-color: #212121;
   --value-font-color: #000;
   --key-font-color: #A8A8A8;
   --small-icon-color: #A8A8A8;
+
+}
+[input-focus="light-true"]{
+  --button-color: #212121;
+  --svg-fill-color: #fff;
+}
+[input-focus="light-false"]{
+  --button-color: #FAFAFA;
+  --svg-fill-color: #A8A8A8;
 }
 [data-theme="dark"]{
   --body-color: #212121;
+  --button-color: #fff;
   --block-color: #292929;
   --button-color: #fff;
   --value-font-color: #fff;
   --key-font-color: #656565;
   --small-icon-color: #656565;
+
 }
+[input-focus="dark-true"]{
+  --button-color: #FFF;
+  --svg-fill-color: #292929;
+}
+[input-focus="dark-false"]{
+  --button-color: #292929;
+  --svg-fill-color: #656565;
+}
+
 html{
   font-family: 'M PLUS Rounded 1c';
 }
@@ -200,7 +219,7 @@ body{
             padding: 16px;
 
             svg {
-              fill: var(--body-color);
+              fill: var(--svg-fill-color);
               width: 18px;
               height: 18px;
             }

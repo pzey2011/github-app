@@ -36,6 +36,7 @@ class Form extends Component {
         {
             ls.set('theme','light');
             this.setState({theme:'light'});
+            document.documentElement.setAttribute('input-focus', 'light-false');
         }
         else{
 
@@ -43,13 +44,14 @@ class Form extends Component {
             {
                 this.setState({theme:'light'});
                 this.themeToggleIcon.current.setAttribute("data-eva", "moon");
-
+                document.documentElement.setAttribute('input-focus', 'light-false');
             }
             else{
                 this.setState({theme:'dark'});
                 this.themeToggleIcon.current.setAttribute("data-eva", "sun-outline");
                 this.themeToggleIcon.current.setAttribute("data-eva-fill", "#fff");
                 document.documentElement.setAttribute('data-theme', 'dark');
+                document.documentElement.setAttribute('input-focus', 'dark-false');
             }
         }
 
@@ -101,6 +103,13 @@ class Form extends Component {
     focusNameInput() {
         this.setState({inputFocused:true});
         this.nameInput.current.focus();
+        if(this.state.theme=='dark')
+        {
+            document.documentElement.setAttribute('input-focus', 'dark-true');
+        }
+        else {
+            document.documentElement.setAttribute('input-focus', 'light-true');
+        }
     }
     handleChange(event) {
 
