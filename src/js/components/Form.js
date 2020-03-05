@@ -99,8 +99,8 @@ class Form extends Component {
                              let unForkedDivItem=(
                                 <ul className="block">
                                     <li className="extra-bold"><a href={item.html_url} className='title' target="_blank">{item.name}</a></li>
-                                    {item.description ? <li>{item.description}</li> : <React.Fragment/>}
-                                    <li>
+                                    {item.description ? <li className="description">{item.description}</li> : <React.Fragment/>}
+                                    <li className="item-container">
                                     {item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
                                         <React.Fragment/>}
                                         <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
@@ -119,10 +119,10 @@ class Form extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
                             let forkedDivItem=(<ul className="block">
-                                <li ><a href={item.html_url} target="_blank" className="title extra-bold">{item.name}</a>
-                                    <div className="item medium">{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login} target="_blank">{'@'+ repo.data.source.owner.login}</a></div></li>
-                                {item.description ? <li>{item.description}</li> : <React.Fragment/>}
-                                <li>{item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
+                                <li className="item-container" ><a href={item.html_url} target="_blank" className="item title extra-bold">{item.name}</a>
+                                    <a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium">{'Forked from @'+ repo.data.source.owner.login}</a></li>
+                                {item.description ? <li className="description">{item.description}</li> : <React.Fragment/>}
+                                <li className="item-container">{item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
                                     <React.Fragment/>}
                                     <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
                                     <div className="item medium"><i data-eva="copy-outline"></i>{item.forks}</div></li>
@@ -137,7 +137,9 @@ class Form extends Component {
                                 return new Date(b.updatedAt) - new Date(a.updatedAt);
                             });
                             if(this.state.repoDivItemsMap.length==result.data.length){
-                                eva.replace();
+                                eva.replace({
+                                    width:18,
+                                    height:18});
                             }
                         }).catch((error) => {
                             // handle error
@@ -176,20 +178,24 @@ class Form extends Component {
                 <h2>Enter a GitHub username,
                     to see the magic.</h2>
 
-                    <form onSubmit={this.handleSearchApi}>
+                    <form className="search-form" onSubmit={this.handleSearchApi}>
                         <label htmlFor="username">GitHub username:</label>
                         <br/>
-                        <input id="username"
-                        type="text"
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        placeholder={'@username'}
-                       ref={this.nameInput}
-                       onClick={this.focusNameInput}
-                        />
-                        <button type="submit" ref={this.submitButton} style={{backgroundColor:'white'}}>
-                            <i data-eva="search-outline" data-eva-fill={!this.state.inputFocused?"black":'white'}></i>
-                        </button>
+                        <div className="form-group">
+
+                            <input id="username"
+                            type="text"
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            placeholder={'@username'}
+                           ref={this.nameInput}
+                           onClick={this.focusNameInput}
+                            />
+                            <button type="submit" ref={this.submitButton} >
+                                <i data-eva="search-outline" data-eva-fill={!this.state.inputFocused?"black":'white'}></i>
+                            </button>
+                        </div>
+
                     </form>
                     <br/>
 

@@ -1,15 +1,6 @@
 html {
   font-family: 'M PLUS Rounded 1c'; }
 
-a {
-  text-decoration: none; }
-
-.block {
-  background-color: #FAFAFA; }
-
-ul {
-  list-style-type: none; }
-
 body {
   background-color: #fff;
   font-style: normal; }
@@ -19,25 +10,76 @@ body {
     body div#app .container .row img {
       width: 240px;
       height: 240px; }
-    body div#app .container .row ul li {
-      font-size: 12px; }
-      body div#app .container .row ul li .item {
-        display: inline; }
-      body div#app .container .row ul li a.title {
+    body div#app .container .row ul.block {
+      background-color: #FAFAFA;
+      width: 396px;
+      height: 113px;
+      padding: 16px 66px 16px 24px; }
+      body div#app .container .row ul.block li.description {
+        margin-top: 10px;
+        margin-bottom: 18px;
+        font-size: 12px; }
+      body div#app .container .row ul.block li.item-container {
+        display: flex;
+        align-items: center; }
+        body div#app .container .row ul.block li.item-container .item:first-child {
+          padding-left: 0px; }
+        body div#app .container .row ul.block li.item-container .item:last-child {
+          padding-right: 0px; }
+      body div#app .container .row ul.block li .title {
         font-size: 14px; }
-    body div#app .container h1 {
-      font-weight: 900;
-      font-size: 28px; }
-    body div#app .container h2 {
-      font-weight: 800;
-      font-size: 21px; }
-    body div#app .container .extra-bold {
-      font-weight: 800; }
-    body div#app .container p, body div#app .container .medium {
-      font-weight: 500; }
-    body div#app .container form label {
-      font-weight: 500;
-      font-size: 14px; }
-    body div#app .container form input::placeholder {
-      font-weight: 500;
-      font-size: 14px; }
+      body div#app .container .row ul.block li .item {
+        display: flex;
+        padding: 0 15px 0 15px; }
+      body div#app .container .row ul.block li .item.medium {
+        font-size: 12px; }
+      body div#app .container .row ul.block li a.title {
+        font-size: 14px; }
+    body div#app .container form.search-form {
+      margin-bottom: 80px; }
+      body div#app .container form.search-form label {
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 16px; }
+      body div#app .container form.search-form .form-group {
+        display: flex; }
+        body div#app .container form.search-form .form-group button {
+          background-color: #212121;
+          border-radius: 8px;
+          border: none;
+          outline: none;
+          padding: 16px; }
+          body div#app .container form.search-form .form-group button svg {
+            fill: #FFFFFF;
+            width: 18px;
+            height: 18px; }
+        body div#app .container form.search-form .form-group input {
+          width: 293px;
+          border: none;
+          outline: none;
+          background-color: #FAFAFA;
+          font-family: 'M PLUS Rounded 1c';
+          padding: 17px  0 17px 0;
+          border-radius: 8px; }
+          body div#app .container form.search-form .form-group input::placeholder {
+            font-weight: 500;
+            font-size: 14px;
+            padding-bottom: 16px;
+            padding-top: 16px;
+            padding-left: 69px; }
+  body h1 {
+    font-weight: 900;
+    font-size: 28px; }
+  body h2 {
+    font-weight: 800;
+    font-size: 21px; }
+  body .extra-bold {
+    font-weight: 800; }
+  body p, body .medium {
+    font-weight: 500; }
+  body a {
+    text-decoration: none; }
+    body a:hover {
+      opacity: 0.8; }
+  body ul {
+    list-style-type: none; }
