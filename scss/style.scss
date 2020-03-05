@@ -26,12 +26,14 @@ body{
         }
         ul{
           li{
-            a{
+            .item{
+              display: inline;
+            }
+            a.title{
               font-size: 14px;
             }
-            p{
-              font-size: 12px;
-            }
+            font-size: 12px;
+
           }
         }
       }

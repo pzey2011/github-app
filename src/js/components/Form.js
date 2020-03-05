@@ -98,13 +98,13 @@ class Form extends Component {
                         {
                              let unForkedDivItem=(
                                 <ul className="block">
-                                    <li className="extra-bold"><a href={item.html_url} target="_blank">{item.name}</a></li>
+                                    <li className="extra-bold"><a href={item.html_url} className='title' target="_blank">{item.name}</a></li>
                                     {item.description ? <li>{item.description}</li> : <React.Fragment/>}
                                     <li>
-                                    {item.language ? <React.Fragment><i data-eva="code-outline"></i>{item.language}</React.Fragment> :
+                                    {item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
                                         <React.Fragment/>}
-                                        <React.Fragment><i data-eva="star-outline"></i>{item.stargazers_count}</React.Fragment>
-                                        <React.Fragment><i data-eva="copy-outline"></i>{item.forks}</React.Fragment></li>
+                                        <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
+                                        <div className="item medium"><i data-eva="copy-outline"></i>{item.forks}</div></li>
                                 </ul>
                             )
                             let repoDivItemMap= {
@@ -119,13 +119,13 @@ class Form extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             this.setState({wait:false});
                             let forkedDivItem=(<ul className="block">
-                                <li className="extra-bold"><a href={item.html_url} target="_blank">{item.name}</a>
-                                {'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login} target="_blank">{'@'+ repo.data.source.owner.login}</a></li>
+                                <li ><a href={item.html_url} target="_blank" className="title extra-bold">{item.name}</a>
+                                    <div className="item medium">{'Forked from '}<a href={'https://github.com/'+repo.data.source.owner.login} target="_blank">{'@'+ repo.data.source.owner.login}</a></div></li>
                                 {item.description ? <li>{item.description}</li> : <React.Fragment/>}
-                                <li>{item.language ? <React.Fragment><i data-eva="code-outline"></i>{item.language}</React.Fragment> :
+                                <li>{item.language ? <div className="item medium"><i data-eva="code-outline"></i>{item.language}</div> :
                                     <React.Fragment/>}
-                                <i data-eva="star-outline"></i>{item.stargazers_count}
-                                <i data-eva="copy-outline"></i>{item.forks}</li>
+                                    <div className="item medium"><i data-eva="star-outline"></i>{item.stargazers_count}</div>
+                                    <div className="item medium"><i data-eva="copy-outline"></i>{item.forks}</div></li>
                             </ul>);
 
                             let repoDivItemMap= {
