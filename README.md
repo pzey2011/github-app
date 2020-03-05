@@ -1,3 +1,3 @@
 # github-app
-npm install\n
+npm install<br />
 npm start
