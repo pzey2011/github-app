@@ -77,12 +77,24 @@ class Form extends Component {
     }
     handleSearchApi(event){
         event.preventDefault();
+
+        this.setState({wait:true});
+        //////change icon manually by dom there was no other solution for this
+        this.submitButton.current.removeChild(document.getElementsByClassName("eva-search-outline")[0]);
+        let newIcon = document.createElement("i");
+        newIcon.setAttribute("data-eva", "loader-outline");
+        this.submitButton.current.append(newIcon);
+        eva.replace({
+            width:18,
+            height:18});
+        ///////
+
         ///reset state
         this.reset();
         /////
-        this.setState({wait:true});
         let userName=this.state.searchQuery.replace('@', '');
         axios.get('https://api.github.com/users/'+userName).then((result)=> {
+            this.setState({wait:false});
             this.setState({resultFound:true});
             this.setState({fullName:result.data.name});
             this.setState({company: result.data.company});
@@ -117,7 +129,6 @@ class Form extends Component {
                 result.data.map((item,i) => {
                     if (item.fork) {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
-                            this.setState({wait:false});
                             let forkedDivItem=(<ul className="block">
                                 <li className="item-container" ><a href={item.html_url} target="_blank" className="item title extra-bold">{item.name}</a>
                                     <a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium">{'Forked from @'+ repo.data.source.owner.login}</a></li>
@@ -137,9 +148,16 @@ class Form extends Component {
                                 return new Date(b.updatedAt) - new Date(a.updatedAt);
                             });
                             if(this.state.repoDivItemsMap.length==result.data.length){
+                                this.setState({wait:false});
+                                //////change icon manually by dom there was no other solution for this
+                                this.submitButton.current.removeChild(document.getElementsByClassName("eva-loader-outline")[0]);
+                                let newIcon = document.createElement("i");
+                                newIcon.setAttribute("data-eva", "search-outline");
+                                this.submitButton.current.append(newIcon);
                                 eva.replace({
                                     width:18,
                                     height:18});
+                                //
                             }
                         }).catch((error) => {
                             // handle error
@@ -157,30 +175,55 @@ class Form extends Component {
             });
         }).catch((error)=> {
             // handle error
-            this.setState({resultFound:false});
-            this.setState({errorMessage:'User not found :('})
             this.setState({wait:false});
+            this.setState({resultFound:false});
+            this.setState({errorMessage:'User not found :('});
+            /////change icon manually by dom there was no other solution for this
+            this.submitButton.current.removeChild(document.getElementsByClassName("eva-loader-outline")[0]);
+            let newIcon = document.createElement("i");
+            newIcon.setAttribute("data-eva", "search-outline");
+            this.submitButton.current.append(newIcon);
+            eva.replace({
+                width:18,
+                height:18});
+            ////
         });
 
         console.log(this.state);
     }
     render() {
-        let repoDivItems = this.state.repoDivItemsMap.map((item,i) => {
-            if(i<4)
-                return item.divItem;
-        });
+        let repoDivColumn1Items = this.state.repoDivItemsMap.map((item,i) => {
+            if(i<2)
+                return (
+                    item.divItem
+                );
 
+
+        });
+        let repoDivColumn2Items = this.state.repoDivItemsMap.map((item,i) => {
+            if(i>1 && i<4)
+                return (
+                    item.divItem
+                );
+        });
+        let repoEmptyColumn1BlockItems=[];
+        for (var i = 0; i < 2; i++) {
+            repoEmptyColumn1BlockItems.push(
+                <ul className="block"></ul>
+            );
+        }
+        let repoEmptyColumn2BlockItems=[];
+        repoEmptyColumn2BlockItems.push(
+            <ul className="block"></ul>
+        );
         return (
             <div className="container">
                 <h1>GitHub Profiles</h1>
-                <br/>
-                <br/>
                 <h2>Enter a GitHub username,
                     to see the magic.</h2>
-
                     <form className="search-form" onSubmit={this.handleSearchApi}>
                         <label htmlFor="username">GitHub username:</label>
-                        <br/>
+
                         <div className="form-group">
 
                             <input id="username"
@@ -192,22 +235,20 @@ class Form extends Component {
                            onClick={this.focusNameInput}
                             />
                             <button type="submit" ref={this.submitButton} >
-                                <i data-eva="search-outline" data-eva-fill={!this.state.inputFocused?"black":'white'}></i>
+                                {this.state.wait? <i data-eva="loader-outline"></i>:<i data-eva="search-outline"></i>}
                             </button>
                         </div>
 
                     </form>
-                    <br/>
 
-                        {this.state.resultFound? <div className="row">
-                                <img src={this.state.avatarUrl} alt=""/>
-                                <br/>
-                                {this.state.fullName?<React.Fragment><p className="extra-bold">{this.state.fullName}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.company?<React.Fragment><p>{'company: '+this.state.company}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.location?<React.Fragment><p>{'location: '+this.state.location}</p></React.Fragment>:<React.Fragment/>}
-                            {this.state.blog? <p>{'blog: '}<a href={this.state.blog} target="_blank">{this.state.blogName}</a></p>:<React.Fragment/>}
-                            {repoDivItems}</div>:
-                            <p style={{color:'red'}}>{this.state.errorMessage}</p>}
+                        {this.state.resultFound? <div className="row"><div className="column-info">
+                                {this.state.wait?<div className="img-block"></div>:(this.state.avatarUrl)?<img className="img-block" src={this.state.avatarUrl} alt=""/>:<React.Fragment/>}
+                                {this.state.wait?<div className="fullname-block"></div>:(this.state.fullName)?<React.Fragment><p className="fullname-block extra-bold">{this.state.fullName}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="company-block"></div>:(this.state.company)?<React.Fragment><p className="company-block">{'Company: '+this.state.company}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="location-block"></div>:(this.state.location)?<React.Fragment><p className="location-block">{'Location: '+this.state.location}</p></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="blog-block"></div>:(this.state.blog)? <p>{'Website: '}<a href={this.state.blog} target="_blank">{this.state.blogName}</a></p>:<React.Fragment/>}
+                            </div> <div className="column-repos"><div className="column-1">{this.state.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.state.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
+                            <p className="error-message extra-bold">{this.state.errorMessage}</p>}
 
             </div>
 

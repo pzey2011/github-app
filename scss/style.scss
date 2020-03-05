@@ -1,4 +1,5 @@
 $color : #fff;
+$block-color : #FAFAFA;
 html{
   font-family: 'M PLUS Rounded 1c';
 }
@@ -7,69 +8,134 @@ body{
   background-color: $color;
   font-style: normal;
   div#app {
-
     .container{
-      margin: auto;
       max-width: 300px;
+      margin: 80px auto auto 350px;
+
+      h1{
+        margin-bottom: 122px;
+      }
+      h2{
+        margin-bottom: 48px;
+      }
       .row{
-        img{
-          width: 240px;
-          height: 240px;
+        margin-top: 80px;
+        display: flex;
+        div.column-info {
+          img.img-block {
+            width: 240px;
+            height: 240px;
+            background-color: $block-color;
+            border-radius: 8px;
+            margin-bottom: 34px;
+          }
+
+          div.img-block {
+            width: 240px;
+            height: 240px;
+            background-color: $block-color;
+            border-radius: 8px;
+            margin-bottom: 34px;
+          }
+
+          div.fullname-block {
+            width: 220px;
+            height: 18px;
+            background-color: $block-color;
+            border-radius: 4px;
+            margin-bottom: 16px;
+          }
+
+          div.company-block {
+            width: 132px;
+            height: 11px;
+            background-color: $block-color;
+            border-radius: 4px;
+            margin-bottom: 16px;
+          }
+          div.location-block {
+            width: 145px;
+            height: 11px;
+            background-color: $block-color;
+            border-radius: 4px;
+            margin-bottom: 16px;
+          }
+          p.location-block,p.company-block,p.fullname-block {
+            margin-bottom: 16px;
+          }
+          div.blog-block {
+            width: 116px;
+            height: 11px;
+            background-color: $block-color;
+            border-radius: 4px;
+          }
         }
-        ul.block{
-          background-color: #FAFAFA;
-          width: 396px;
-          height: 113px;
-          padding: 16px 66px 16px 24px;
-          li.description {
-            margin-top: 10px;
-            margin-bottom: 18px;
-            font-size: 12px;
+        div.column-repos{
+          display: flex;
+          margin-left: 69px;
+          .column-2{
+            margin-left: 16px;
           }
-          li.item-container{
-            display: flex;
-            align-items: center;
+          div.column-1,div.column-2 {
+            ul.block {
+              background-color: $block-color;
+              width: 396px;
+              height: 113px;
+              padding: 16px 66px 16px 24px;
+              border-radius: 8px;
 
-            .item:first-child{
-              padding-left: 0px;
-            }
-            .item:last-child{
-              padding-right: 0px;
+              li.description {
+                margin-top: 10px;
+                margin-bottom: 18px;
+                font-size: 12px;
+              }
+
+              li.item-container {
+                display: flex;
+                align-items: center;
+
+                .item:first-child {
+                  padding-left: 0px;
+                }
+
+                .item:last-child {
+                  padding-right: 0px;
+                }
+              }
+
+              li {
+                .title {
+                  font-size: 14px;
+                }
+
+                .item {
+                  display: flex;
+                  padding: 0 15px 0 15px;
+                }
+
+                .item.medium {
+                  font-size: 12px;
+                }
+
+                a.title {
+                  font-size: 14px;
+                }
+
+              }
             }
           }
-
-          li{
-            .title{
-              font-size: 14px;
-            }
-            .item{
-              display: flex;
-              padding: 0 15px 0 15px;
-            }
-            .item.medium{
-              font-size: 12px;
-            }
-            a.title{
-              font-size: 14px;
-            }
-
-          }
-        }
-        ul{
-
         }
       }
 
       form.search-form
       {
-        margin-bottom: 80px;
         label{
           font-weight: 500;
           font-size: 14px;
-          margin-bottom: 16px;
         }
         .form-group{
           display: flex;
+          margin-top: 16px;
           button{
             background-color: #212121;
             border-radius: 8px;
@@ -93,9 +159,7 @@ body{
             &::placeholder{
               font-weight: 500;
               font-size: 14px;
-              padding-bottom: 16px;
-              padding-top: 16px;
-              padding-left: 69px;
+              font-family: 'M PLUS Rounded 1c';
             }
 
           }
@@ -127,7 +191,10 @@ body{
     }
     text-decoration: none;
   }
-
+  .error-message{
+    color:red;
+    margin-top: 16px;
+  }
 
   ul {
     list-style-type: none;
