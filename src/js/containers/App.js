@@ -2,15 +2,14 @@ import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
 import { connect } from 'react-redux'
-import { checkThemeLocal , getTheme , setTheme } from '../actions'
+import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation} from '../actions'
 import ls from 'local-storage';
 
-class Form extends Component {
+class App extends Component {
     constructor() {
         super();
 
         this.state = {
-            searchQuery: "",
             fullName:"",
             location:"",
             company:"",
@@ -19,7 +18,6 @@ class Form extends Component {
             avatarUrl:"",
             repoDivItemsMap:[],
             resultFound:true,
-            theme:'',
             inputFocused:false,
         };
         this.handleSearchApi= this.handleSearchApi.bind(this);
@@ -28,7 +26,8 @@ class Form extends Component {
         this.submitButton=React.createRef();
         this.themeToggleIcon=React.createRef();
         this.themeToggleIconDiv=React.createRef();
-        this.focusNameInput = this.focusNameInput.bind(this);
+        this.onFocus = this.onFocus.bind(this);
+        this.onBlur = this.onBlur.bind(this);
         this.getUrlHostName=this.getUrlHostName.bind(this);
         this.reset=this.reset.bind(this);
         this.toggleTheme=this.toggleTheme.bind(this);
@@ -88,19 +87,13 @@ class Form extends Component {
         }
     }
     reset(){
-        this.setState({fullName:"",
-            location:"",
-            company:"",
-            blog:"",
-            blogName:"",
-            avatarUrl:"",
+        this.props.resetInfo();
+        this.setState({
             repoDivItemsMap:[],
             resultFound:true,
             inputFocused:false});
     }
-    focusNameInput() {
-        this.setState({inputFocused:true});
-        this.nameInput.current.focus();
+    onFocus(){
         if(this.state.theme=='dark')
         {
             document.documentElement.setAttribute('input-focus', 'dark-true');
@@ -109,15 +102,19 @@ class Form extends Component {
             document.documentElement.setAttribute('input-focus', 'light-true');
         }
     }
+    onBlur(){
+        if(this.state.theme=='dark')
+        {
+            document.documentElement.setAttribute('input-focus', 'dark-false');
+        }
+        else {
+            document.documentElement.setAttribute('input-focus', 'light-false');
+        }
+    }
     handleChange(event) {
 
         const { value } = event.target;
-        value.replace('@', '');
-        this.setState(() => {
-            return {
-                searchQuery: value
-            };
-        });
+        this.props.changeUsername(value);
     }
     getUrlHostName(url){
         let hostname="";
@@ -151,17 +148,19 @@ class Form extends Component {
         ///reset state
         this.reset();
         /////
-        let userName=this.state.searchQuery.replace('@', '');
+        let userName=this.props.form.username.replace('@', '');
         axios.get('https://api.github.com/users/'+userName).then((result)=> {
             this.setState({wait:false});
             this.setState({resultFound:true});
-            this.setState({fullName:result.data.name});
-            this.setState({company: result.data.company});
-            this.setState({location: result.data.location});
-            this.setState({blog: result.data.blog});
+            this.props.changeFullname(result.data.name);
+            this.props.changeCompany(result.data.company);
+            this.props.changeLocation(result.data.location);
+
+            this.props.changeBlog(result.data.blog);
+            this.props.changeAvatarUrl(result.data.avatar_url);
+
             let hostName=this.getUrlHostName(result.data.blog);
-            this.setState({blogName: hostName});
-            this.setState({avatarUrl:result.data.avatar_url});
+            this.props.changeBlogName(hostName);
             axios.get('https://api.github.com/users/'+userName+"/repos?sort=created&direction=desc").then((result)=> {
                 result.data.map((item,i) =>{
                         let forkedLink =<React.Fragment/>;
@@ -289,11 +288,12 @@ class Form extends Component {
 
                             <input id="username"
                             type="text"
-                            value={this.state.value}
+                            value={this.props.form.username}
                             onChange={this.handleChange}
                             placeholder={'@username'}
+                                   onFocus={this.onFocus}
+                                   onBlur={this.onBlur}
                            ref={this.nameInput}
-                           onClick={this.focusNameInput}
                             />
                             <button type="submit" ref={this.submitButton} >
                                 {this.state.wait? <i data-eva="loader-outline"></i>:<i data-eva="search-outline"></i>}
@@ -303,11 +303,11 @@ class Form extends Component {
                     </form>
 
                         {this.state.resultFound? <div className="row"><div className="column-info">
-                                {this.state.wait?<div className="img-block"></div>:(this.state.avatarUrl)?<img className="img-block" src={this.state.avatarUrl} alt=""/>:<React.Fragment/>}
-                                {this.state.wait?<div className="fullname-block"></div>:(this.state.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.state.fullName}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="company-block"></div>:(this.state.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.state.company}</p></div></React.Fragment>:<React.Fragment/>}
-                                {this.state.wait?<div className="location-block"></div>:(this.state.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.state.location}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="blog-block"></div>:(this.state.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.state.blog} target="_blank">{this.state.blogName}</a></div>:<React.Fragment/>}
+                                {this.state.wait?<div className="img-block"></div>:(this.props.infos.avatarUrl)?<img className="img-block" src={this.props.infos.avatarUrl} alt=""/>:<React.Fragment/>}
+                                {this.state.wait?<div className="fullname-block"></div>:(this.props.infos.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.props.infos.fullName}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="company-block"></div>:(this.props.infos.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.props.infos.company}</p></div></React.Fragment>:<React.Fragment/>}
+                                {this.state.wait?<div className="location-block"></div>:(this.props.infos.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.props.infos.location}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.state.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
                             </div> <div className="column-repos"><div className="column-1">{this.state.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.state.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
                             <p className="error-message extra-bold">{this.state.errorMessage}</p>}
                 </div>
@@ -318,11 +318,21 @@ class Form extends Component {
 }
 
 const mapStateToProps = state => ({
-    themeInfo: state.themeInfo
+    themeInfo: state.themeInfo,
+    infos:state.infos,
+    form:state.form,
+    repos:state.repos,
 })
 const mapDispatchToProps = dispatch => ({
-    checkThemeLocal: () => dispatch(checkThemeLocal()),
-    getTheme: () => dispatch(getTheme()),
-    setTheme: (theme) => dispatch(setTheme(theme))
+    setTheme: (theme) => dispatch(setTheme(theme)),
+    changeUsername:(name) => dispatch(changeUsername(name)),
+    resetInfo:() => dispatch(resetInfo()),
+    changeCompany:(data) => dispatch(changeCompany(data)),
+    changeFullname:(data) => dispatch(changeFullname(data)),
+    changeLocation:(data) => dispatch(changeLocation(data)),
+    changeBlogName:(data) => dispatch(changeBlogName(data)),
+    changeBlog:(data) => dispatch(changeBlog(data)),
+    changeAvatarUrl:(data) => dispatch(changeAvatarUrl(data))
+
 })
-export default connect(mapStateToProps, mapDispatchToProps)(Form)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

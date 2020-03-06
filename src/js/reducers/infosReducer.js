@@ -1,28 +1,56 @@
+const initialState = {
+    fullName:"",
+    location:"",
+    company:"",
+    blog:"",
+    blogName:"",
+    avatarUrl:"",
+};
 
-function infosReducer(state = [], action)
+function infosReducer(state = initialState, action)
 {
     switch(action.type) {
-        case 'LOAD_TODOS':
-            return action.todos;
+        case 'RESET_INFO':
+            return state={
+                fullName:"",
+                location:"",
+                company:"",
+                blog:"",
+                blogName:"",
+                avatarUrl:""
+            };
 
-        case 'ADD_TODO':
-            return [
+        case 'CHANGE_FULLNAME':
+            return state = {
                 ...state,
-                {
-                    id: action.id,
-                    title: action.title,
-                    done: false
-                }
-            ];
+                fullName:action.payload
+            };
 
-        case 'TOGGLE_TODO':
-            return state.map(todo => (todo.id === action.index)
-                ? {...todo, done: !todo.done}
-                : todo
-            );
-
-        case 'DELETE_TODO':
-            return state.filter(todo => todo.id !== action.index);
+        case 'CHANGE_LOCATION':
+            return state = {
+                ...state,
+                location:action.payload
+            };
+        case 'CHANGE_COMPANY':
+            return state = {
+                ...state,
+                company:action.payload
+            };
+        case 'CHANGE_BLOG':
+            return state = {
+                ...state,
+                blog:action.payload
+            };
+        case 'CHANGE_BLOGNAME':
+            return state = {
+                ...state,
+                blogName:action.payload
+            };
+        case 'CHANGE_AVATARURL':
+            return state = {
+                ...state,
+                avatarUrl:action.payload
+            };
 
         default:
             return state;
