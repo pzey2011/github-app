@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
+import { connect } from 'react-redux'
+import { checkThemeLocal , getTheme , setTheme } from '../actions'
 import ls from 'local-storage';
 
 class Form extends Component {
@@ -32,26 +34,24 @@ class Form extends Component {
         this.toggleTheme=this.toggleTheme.bind(this);
     }
     componentDidMount() {
+
         if(!ls.get('theme'))
         {
-            ls.set('theme','light');
-            this.setState({theme:'light'});
+            this.props.setTheme('light');
             document.documentElement.setAttribute('input-focus', 'light-false');
         }
         else{
-
-            if(ls.get('theme')=='light')
+            if(ls.get('theme')=='dark')
             {
-                this.setState({theme:'light'});
-                this.themeToggleIcon.current.setAttribute("data-eva", "moon");
-                document.documentElement.setAttribute('input-focus', 'light-false');
-            }
-            else{
-                this.setState({theme:'dark'});
+                this.props.setTheme('dark');
                 this.themeToggleIcon.current.setAttribute("data-eva", "sun-outline");
                 this.themeToggleIcon.current.setAttribute("data-eva-fill", "#fff");
                 document.documentElement.setAttribute('data-theme', 'dark');
                 document.documentElement.setAttribute('input-focus', 'dark-false');
+            }
+            else{
+                this.themeToggleIcon.current.setAttribute("data-eva", "moon");
+                document.documentElement.setAttribute('input-focus', 'light-false');
             }
         }
 
@@ -62,7 +62,7 @@ class Form extends Component {
 
     }
     toggleTheme(){
-        if(this.state.theme=='dark')
+        if(this.props.themeInfo.theme=='dark')
         {
             this.themeToggleIconDiv.current.removeChild(document.getElementsByClassName("eva-sun-outline")[0]);
             let newIcon = document.createElement("i");
@@ -71,8 +71,7 @@ class Form extends Component {
             eva.replace({
                 width:18,
                 height:18});
-            ls.set('theme','light');
-            this.setState({theme:'light'});
+            this.props.setTheme('light');
             document.documentElement.setAttribute('data-theme', 'light');
         }
         else{
@@ -84,8 +83,7 @@ class Form extends Component {
             eva.replace({
                 width:18,
                 height:18});
-            ls.set('theme','dark');
-            this.setState({theme:'dark'});
+            this.props.setTheme('dark');
             document.documentElement.setAttribute('data-theme', 'dark');
         }
     }
@@ -280,7 +278,7 @@ class Form extends Component {
         return (
             <div className="container">
                 <div className="container-2">
-                    <div className="theme-icon-div" ref={this.themeToggleIconDiv} onClick={this.toggleTheme}><i className="theme-icon" data-eva={this.state.theme=='light'?"moon":"sun-outline"} ref={this.themeToggleIcon} data-eva-fill="#212121" ></i></div>
+                    <div className="theme-icon-div" ref={this.themeToggleIconDiv} onClick={this.toggleTheme}><i className="theme-icon" data-eva={this.props.themeInfo.theme=='light'?"moon":"sun-outline"} ref={this.themeToggleIcon} data-eva-fill="#212121" ></i></div>
                     <h1>GitHub Profiles</h1>
                     <h2>Enter a GitHub username,
                         to see the magic.</h2>
@@ -319,4 +317,12 @@ class Form extends Component {
     }
 }
 
-export default Form;
+const mapStateToProps = state => ({
+    themeInfo: state.themeInfo
+})
+const mapDispatchToProps = dispatch => ({
+    checkThemeLocal: () => dispatch(checkThemeLocal()),
+    getTheme: () => dispatch(getTheme()),
+    setTheme: (theme) => dispatch(setTheme(theme))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Form)
