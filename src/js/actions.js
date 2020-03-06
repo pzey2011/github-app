@@ -1,13 +1,4 @@
 
-
-export function checkThemeLocal() {
-    return { type: 'CHECK_THEME_LOCAL'}
-}
-
-export function getTheme() {
-    return { type: 'GET_THEME' }
-}
-
 export function setTheme(theme) {
     return { type: 'SET_THEME', payload: theme }
 }
@@ -31,6 +22,12 @@ export function changeLocation(data){
     return { type: 'CHANGE_BLOGNAME', payload: data }
 }export function changeAvatarUrl(data){
     return { type: 'CHANGE_AVATARURL', payload: data }
+}
+export function changeErrorMessage(data){
+    return { type: 'CHANGE_ERRORMESSAGE', payload: data }
+}
+export function changeInputFocused(data){
+    return { type: 'CHANGE_INPUTFOCUS', payload: data }
 }
 
 

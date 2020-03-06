@@ -3,7 +3,8 @@ import ls from 'local-storage';
 
 const initialState = {
     theme: 'light',
-    haveTheme:false
+    haveTheme:false,
+    inputFocused:false,
 };
 const themeReducer = (state = initialState, action) => {
     if (action.type === 'CHECK_THEME_LOCAL') {
@@ -27,7 +28,15 @@ const themeReducer = (state = initialState, action) => {
                 theme: action.payload
             }
 
-    }  else {
+    }
+    else if(action.type ==='CHANGE_INPUTFOCUS')
+    {
+        return state = {
+            ...state,
+            inputFocused: action.payload
+        }
+    }
+    else {
         return state
     }
 }

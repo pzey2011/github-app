@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
 import { connect } from 'react-redux'
-import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation} from '../actions'
+import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused} from '../actions'
 import ls from 'local-storage';
 
 class App extends Component {
@@ -72,6 +72,13 @@ class App extends Component {
                 height:18});
             this.props.setTheme('light');
             document.documentElement.setAttribute('data-theme', 'light');
+            if(this.props.themeInfo.inputFocused)
+            {
+                document.documentElement.setAttribute('input-focus', 'light-true');
+            }
+            else{
+                document.documentElement.setAttribute('input-focus', 'light-false');
+            }
         }
         else{
             this.themeToggleIconDiv.current.removeChild(document.getElementsByClassName("eva-moon")[0]);
@@ -84,6 +91,13 @@ class App extends Component {
                 height:18});
             this.props.setTheme('dark');
             document.documentElement.setAttribute('data-theme', 'dark');
+            if(this.props.themeInfo.inputFocused)
+            {
+                document.documentElement.setAttribute('input-focus', 'dark-true');
+            }
+            else{
+                document.documentElement.setAttribute('input-focus', 'dark-false');
+            }
         }
     }
     reset(){
@@ -94,7 +108,8 @@ class App extends Component {
             inputFocused:false});
     }
     onFocus(){
-        if(this.state.theme=='dark')
+        this.props.changeInputFocused(true);
+        if(this.props.themeInfo.theme=='dark')
         {
             document.documentElement.setAttribute('input-focus', 'dark-true');
         }
@@ -103,7 +118,8 @@ class App extends Component {
         }
     }
     onBlur(){
-        if(this.state.theme=='dark')
+        this.props.changeInputFocused(false);
+        if(this.props.themeInfo.theme=='dark')
         {
             document.documentElement.setAttribute('input-focus', 'dark-false');
         }
@@ -155,7 +171,6 @@ class App extends Component {
             this.props.changeFullname(result.data.name);
             this.props.changeCompany(result.data.company);
             this.props.changeLocation(result.data.location);
-
             this.props.changeBlog(result.data.blog);
             this.props.changeAvatarUrl(result.data.avatar_url);
 
@@ -235,7 +250,7 @@ class App extends Component {
             // handle error
             this.setState({wait:false});
             this.setState({resultFound:false});
-            this.setState({errorMessage:'User not found :('});
+            this.props.changeErrorMessage('User not found :(');
             /////change icon manually by dom there was no other solution for this
             this.submitButton.current.removeChild(document.getElementsByClassName("eva-loader-outline")[0]);
             let newIcon = document.createElement("i");
@@ -309,7 +324,7 @@ class App extends Component {
                                 {this.state.wait?<div className="location-block"></div>:(this.props.infos.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.props.infos.location}</p></div></React.Fragment>:<React.Fragment/>}
                             {this.state.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
                             </div> <div className="column-repos"><div className="column-1">{this.state.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.state.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
-                            <p className="error-message extra-bold">{this.state.errorMessage}</p>}
+                            <p className="error-message extra-bold">{this.props.infos.errorMessage}</p>}
                 </div>
             </div>
 
@@ -332,7 +347,8 @@ const mapDispatchToProps = dispatch => ({
     changeLocation:(data) => dispatch(changeLocation(data)),
     changeBlogName:(data) => dispatch(changeBlogName(data)),
     changeBlog:(data) => dispatch(changeBlog(data)),
-    changeAvatarUrl:(data) => dispatch(changeAvatarUrl(data))
-
+    changeAvatarUrl:(data) => dispatch(changeAvatarUrl(data)),
+    changeErrorMessage:(data) => dispatch(changeErrorMessage(data)),
+    changeInputFocused:(data) => dispatch(changeInputFocused(data)),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(App)

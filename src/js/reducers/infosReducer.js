@@ -5,6 +5,7 @@ const initialState = {
     blog:"",
     blogName:"",
     avatarUrl:"",
+    errorMessage:""
 };
 
 function infosReducer(state = initialState, action)
@@ -17,7 +18,8 @@ function infosReducer(state = initialState, action)
                 company:"",
                 blog:"",
                 blogName:"",
-                avatarUrl:""
+                avatarUrl:"",
+                errorMessage:""
             };
 
         case 'CHANGE_FULLNAME':
@@ -51,7 +53,11 @@ function infosReducer(state = initialState, action)
                 ...state,
                 avatarUrl:action.payload
             };
-
+        case 'CHANGE_ERRORMESSAGE':
+            return state = {
+                ...state,
+                errorMessage:action.payload
+            };
         default:
             return state;
     }
