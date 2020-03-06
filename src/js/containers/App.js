@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
 import { connect } from 'react-redux'
-import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused} from '../actions'
+import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused,addRepoDivItem,resetRepoDivItems} from '../actions'
 import ls from 'local-storage';
 
 class App extends Component {
@@ -10,15 +10,8 @@ class App extends Component {
         super();
 
         this.state = {
-            fullName:"",
-            location:"",
-            company:"",
-            blog:"",
-            blogName:"",
-            avatarUrl:"",
             repoDivItemsMap:[],
             resultFound:true,
-            inputFocused:false,
         };
         this.handleSearchApi= this.handleSearchApi.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -350,5 +343,8 @@ const mapDispatchToProps = dispatch => ({
     changeAvatarUrl:(data) => dispatch(changeAvatarUrl(data)),
     changeErrorMessage:(data) => dispatch(changeErrorMessage(data)),
     changeInputFocused:(data) => dispatch(changeInputFocused(data)),
+    resetRepoDivItems:() => dispatch(resetRepoDivItems()),
+    addRepoDivItem:(data) => dispatch(addRepoDivItem(data)),
+
 })
 export default connect(mapStateToProps, mapDispatchToProps)(App)

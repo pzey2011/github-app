@@ -1,11 +1,10 @@
-
-function reposReducer(state = [], action)
+const initialState = {
+    repoDivItemsMap:[],
+};
+function reposReducer(state = initialState, action)
 {
     switch(action.type) {
-        case 'LOAD_TODOS':
-            return action.todos;
-
-        case 'ADD_TODO':
+        case 'ADD_REPO_DIV_ITEM':
             return [
                 ...state,
                 {
@@ -14,15 +13,10 @@ function reposReducer(state = [], action)
                     done: false
                 }
             ];
-
-        case 'TOGGLE_TODO':
-            return state.map(todo => (todo.id === action.index)
-                ? {...todo, done: !todo.done}
-                : todo
-            );
-
-        case 'DELETE_TODO':
-            return state.filter(todo => todo.id !== action.index);
+        case 'RESET_REPO_DIV_ITEMS':
+            return state = {
+                repoDivItemsMap:[]
+            }
 
         default:
             return state;
