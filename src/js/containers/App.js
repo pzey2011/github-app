@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Infos from '../components/infos';
+import Repos from '../components/repos';
 import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused,pushRepoDivItem,resetRepoDivItems,setWait,setResultFound,resetForm} from '../actions'
 import ls from 'local-storage';
 
@@ -253,30 +255,7 @@ class App extends Component {
         console.log(this.state);
     }
     render() {
-        let repoDivColumn1Items = this.props.repoDivItems.map((item,i) => {
-            if(i<2)
-                return (
-                    item.divItem
-                );
 
-
-        });
-        let repoDivColumn2Items = this.props.repoDivItems.map((item,i) => {
-            if(i>1 && i<4)
-                return (
-                    item.divItem
-                );
-        });
-        let repoEmptyColumn1BlockItems=[];
-        for (var i = 0; i < 2; i++) {
-            repoEmptyColumn1BlockItems.push(
-                <ul className="block"></ul>
-            );
-        }
-        let repoEmptyColumn2BlockItems=[];
-        repoEmptyColumn2BlockItems.push(
-            <ul className="block"></ul>
-        );
         return (
             <div className="container">
                     <div className="theme-icon-div" ref={this.themeToggleIconDiv} onClick={this.toggleTheme}><i className="theme-icon" data-eva={this.props.themeInfo.theme=='light'?"moon":"sun-outline"} ref={this.themeToggleIcon} data-eva-fill="#212121" ></i></div>
@@ -304,13 +283,7 @@ class App extends Component {
 
                     </form>
 
-                        {this.props.form.resultFound? <div className="row"><div className="column-info">
-                                {this.props.form.wait?<div className="img-block"></div>:(this.props.infos.avatarUrl)?<img className="img-block" src={this.props.infos.avatarUrl} alt=""/>:<React.Fragment/>}
-                                {this.props.form.wait?<div className="fullname-block"></div>:(this.props.infos.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.props.infos.fullName}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.props.form.wait?<div className="company-block"></div>:(this.props.infos.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.props.infos.company}</p></div></React.Fragment>:<React.Fragment/>}
-                                {this.props.form.wait?<div className="location-block"></div>:(this.props.infos.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.props.infos.location}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.props.form.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
-                            </div> <div className="column-repos"><div className="column-1">{this.props.form.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.props.form.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
+                        {this.props.form.resultFound? <div className="row"><Infos /> <Repos /></div>:
                             <p className="error-message extra-bold">{this.props.infos.errorMessage}</p>}
             </div>
 
