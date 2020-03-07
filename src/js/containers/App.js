@@ -279,7 +279,6 @@ class App extends Component {
         );
         return (
             <div className="container">
-                <div className="container-2">
                     <div className="theme-icon-div" ref={this.themeToggleIconDiv} onClick={this.toggleTheme}><i className="theme-icon" data-eva={this.props.themeInfo.theme=='light'?"moon":"sun-outline"} ref={this.themeToggleIcon} data-eva-fill="#212121" ></i></div>
                     <h1>GitHub Profiles</h1>
                     <h2>Enter a GitHub username,
@@ -313,7 +312,6 @@ class App extends Component {
                             {this.props.form.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
                             </div> <div className="column-repos"><div className="column-1">{this.props.form.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.props.form.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
                             <p className="error-message extra-bold">{this.props.infos.errorMessage}</p>}
-                </div>
             </div>
 
         );
