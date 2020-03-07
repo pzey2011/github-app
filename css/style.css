@@ -108,7 +108,8 @@ body {
           width: 396px;
           height: 113px;
           padding: 16px 66px 16px 24px;
-          border-radius: 8px; }
+          border-radius: 8px;
+          margin-top: 0px; }
           body div#app .container .row div.column-repos div.column-1 ul.block li.description, body div#app .container .row div.column-repos div.column-2 ul.block li.description {
             margin-top: 10px;
             margin-bottom: 18px;
@@ -120,13 +121,15 @@ body {
             body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .forked, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .forked {
               padding-right: 0px;
               padding-left: 0px;
+              margin-right: 2px;
               color: var(--value-font-color); }
             body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .icon-item:first-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .icon-item:first-child {
               padding-left: 0px; }
             body div#app .container .row div.column-repos div.column-1 ul.block li.item-container .icon-item:last-child, body div#app .container .row div.column-repos div.column-2 ul.block li.item-container .icon-item:last-child {
               padding-right: 0px; }
           body div#app .container .row div.column-repos div.column-1 ul.block li .title, body div#app .container .row div.column-repos div.column-2 ul.block li .title {
-            font-size: 14px; }
+            font-size: 14px;
+            margin-right: 35px; }
           body div#app .container .row div.column-repos div.column-1 ul.block li .icon-item, body div#app .container .row div.column-repos div.column-2 ul.block li .icon-item {
             display: flex;
             padding: 0 15px 0 15px; }

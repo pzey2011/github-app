@@ -2,17 +2,13 @@ import React, { Component } from "react";
 import * as eva from 'eva-icons';
 import axios from 'axios';
 import { connect } from 'react-redux'
-import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused,addRepoDivItem,resetRepoDivItems} from '../actions'
+import { setTheme ,changeUsername,resetInfo,changeFullname,changeAvatarUrl,changeBlog,changeBlogName,changeCompany,changeLocation,changeErrorMessage,changeInputFocused,pushRepoDivItem,resetRepoDivItems,setWait,setResultFound,resetForm} from '../actions'
 import ls from 'local-storage';
 
 class App extends Component {
     constructor() {
         super();
 
-        this.state = {
-            repoDivItemsMap:[],
-            resultFound:true,
-        };
         this.handleSearchApi= this.handleSearchApi.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.nameInput=React.createRef();
@@ -65,7 +61,7 @@ class App extends Component {
                 height:18});
             this.props.setTheme('light');
             document.documentElement.setAttribute('data-theme', 'light');
-            if(this.props.themeInfo.inputFocused)
+            if(this.props.form.inputFocused)
             {
                 document.documentElement.setAttribute('input-focus', 'light-true');
             }
@@ -84,7 +80,7 @@ class App extends Component {
                 height:18});
             this.props.setTheme('dark');
             document.documentElement.setAttribute('data-theme', 'dark');
-            if(this.props.themeInfo.inputFocused)
+            if(this.props.form.inputFocused)
             {
                 document.documentElement.setAttribute('input-focus', 'dark-true');
             }
@@ -95,10 +91,8 @@ class App extends Component {
     }
     reset(){
         this.props.resetInfo();
-        this.setState({
-            repoDivItemsMap:[],
-            resultFound:true,
-            inputFocused:false});
+        this.props.resetRepoDivItems();
+        this.props.resetForm();
     }
     onFocus(){
         this.props.changeInputFocused(true);
@@ -143,7 +137,7 @@ class App extends Component {
     handleSearchApi(event){
         event.preventDefault();
 
-        this.setState({wait:true});
+        this.props.wait(true);
         //////change icon manually by dom there was no other solution for this
         this.submitButton.current.removeChild(document.getElementsByClassName("eva-search-outline")[0]);
         let newIcon = document.createElement("i");
@@ -159,8 +153,8 @@ class App extends Component {
         /////
         let userName=this.props.form.username.replace('@', '');
         axios.get('https://api.github.com/users/'+userName).then((result)=> {
-            this.setState({wait:false});
-            this.setState({resultFound:true});
+            this.props.wait(false);
+            this.props.resultFound(true);
             this.props.changeFullname(result.data.name);
             this.props.changeCompany(result.data.company);
             this.props.changeLocation(result.data.location);
@@ -189,7 +183,8 @@ class App extends Component {
                                 updatedAt: item.updated_at,
                                 divItem: unForkedDivItem
                             }
-                            this.setState({ repoDivItemsMap: [...this.state.repoDivItemsMap, repoDivItemMap] });
+
+                            this.props.pushRepoDivItem(repoDivItemMap);
                         }
                 });
                 result.data.map((item,i) => {
@@ -197,7 +192,7 @@ class App extends Component {
                         axios.get('https://api.github.com/repos/' + userName + "/" + item.name+"?sort=created&direction=desc").then((repo) => {
                             let forkedDivItem=(<ul className="block">
                                 <li className="item-container" ><a href={item.html_url} target="_blank" className="item title extra-bold">{item.name}</a>
-                                    <p className="item medium forked">{'Forked from @'}</p><a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium">{repo.data.source.owner.login}</a></li>
+                                    <p className="item medium forked">{"Forked from "}</p><a href={'https://github.com/'+repo.data.source.owner.login} target="_blank"  className="item medium ">{' @'+repo.data.source.owner.login}</a></li>
                                 {item.description ? <li className="description">{item.description}</li> : <React.Fragment/>}
                                 <li className="item-container">{item.language ? <div className="icon-item medium"><i data-eva="code-outline"></i><p className="language">{item.language}</p></div> :
                                     <React.Fragment/>}
@@ -209,12 +204,12 @@ class App extends Component {
                                 updatedAt: item.updated_at,
                                 divItem: forkedDivItem
                             }
-                            this.setState({ repoDivItemsMap: [...this.state.repoDivItemsMap, repoDivItemMap] });
-                            this.state.repoDivItemsMap.sort(function(a,b){
+                            this.props.pushRepoDivItem(repoDivItemMap);
+                            this.props.repoDivItems.sort(function(a,b){
                                 return new Date(b.updatedAt) - new Date(a.updatedAt);
                             });
-                            if(this.state.repoDivItemsMap.length==result.data.length){
-                                this.setState({wait:false});
+                            if(this.props.repoDivItems.length==result.data.length){
+                                this.props.wait(false);
                                 //////change icon manually by dom there was no other solution for this
                                 this.submitButton.current.removeChild(document.getElementsByClassName("eva-loader-outline")[0]);
                                 let newIcon = document.createElement("i");
@@ -241,8 +236,8 @@ class App extends Component {
             });
         }).catch((error)=> {
             // handle error
-            this.setState({wait:false});
-            this.setState({resultFound:false});
+            this.props.wait(false);
+            this.props.resultFound(false);
             this.props.changeErrorMessage('User not found :(');
             /////change icon manually by dom there was no other solution for this
             this.submitButton.current.removeChild(document.getElementsByClassName("eva-loader-outline")[0]);
@@ -258,7 +253,7 @@ class App extends Component {
         console.log(this.state);
     }
     render() {
-        let repoDivColumn1Items = this.state.repoDivItemsMap.map((item,i) => {
+        let repoDivColumn1Items = this.props.repoDivItems.map((item,i) => {
             if(i<2)
                 return (
                     item.divItem
@@ -266,7 +261,7 @@ class App extends Component {
 
 
         });
-        let repoDivColumn2Items = this.state.repoDivItemsMap.map((item,i) => {
+        let repoDivColumn2Items = this.props.repoDivItems.map((item,i) => {
             if(i>1 && i<4)
                 return (
                     item.divItem
@@ -304,19 +299,19 @@ class App extends Component {
                            ref={this.nameInput}
                             />
                             <button type="submit" ref={this.submitButton} >
-                                {this.state.wait? <i data-eva="loader-outline"></i>:<i data-eva="search-outline"></i>}
+                                {this.props.form.wait? <i data-eva="loader-outline"></i>:<i data-eva="search-outline"></i>}
                             </button>
                         </div>
 
                     </form>
 
-                        {this.state.resultFound? <div className="row"><div className="column-info">
-                                {this.state.wait?<div className="img-block"></div>:(this.props.infos.avatarUrl)?<img className="img-block" src={this.props.infos.avatarUrl} alt=""/>:<React.Fragment/>}
-                                {this.state.wait?<div className="fullname-block"></div>:(this.props.infos.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.props.infos.fullName}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="company-block"></div>:(this.props.infos.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.props.infos.company}</p></div></React.Fragment>:<React.Fragment/>}
-                                {this.state.wait?<div className="location-block"></div>:(this.props.infos.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.props.infos.location}</p></div></React.Fragment>:<React.Fragment/>}
-                            {this.state.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
-                            </div> <div className="column-repos"><div className="column-1">{this.state.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.state.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
+                        {this.props.form.resultFound? <div className="row"><div className="column-info">
+                                {this.props.form.wait?<div className="img-block"></div>:(this.props.infos.avatarUrl)?<img className="img-block" src={this.props.infos.avatarUrl} alt=""/>:<React.Fragment/>}
+                                {this.props.form.wait?<div className="fullname-block"></div>:(this.props.infos.fullName)?<React.Fragment><div className="fullname-p-block extra-bold"><p className="fullname-value">{this.props.infos.fullName}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.props.form.wait?<div className="company-block"></div>:(this.props.infos.company)?<React.Fragment><div className="company-p-block"><p className="company-key">{'Company: '}</p><p className="company-value">{this.props.infos.company}</p></div></React.Fragment>:<React.Fragment/>}
+                                {this.props.form.wait?<div className="location-block"></div>:(this.props.infos.location)?<React.Fragment><div className="location-p-block"><p className="location-key">{'Location: '}</p><p className="location-value">{this.props.infos.location}</p></div></React.Fragment>:<React.Fragment/>}
+                            {this.props.form.wait?<div className="blog-block"></div>:(this.props.infos.blog)? <div className="blog-p-block"><p className="blog-key">{'Website: '}</p><a href={this.props.infos.blog} target="_blank">{this.props.infos.blogName}</a></div>:<React.Fragment/>}
+                            </div> <div className="column-repos"><div className="column-1">{this.props.form.wait?repoEmptyColumn1BlockItems:repoDivColumn1Items}</div><div className="column-2">{this.props.form.wait?repoEmptyColumn2BlockItems:repoDivColumn2Items}</div></div></div>:
                             <p className="error-message extra-bold">{this.props.infos.errorMessage}</p>}
                 </div>
             </div>
@@ -329,7 +324,7 @@ const mapStateToProps = state => ({
     themeInfo: state.themeInfo,
     infos:state.infos,
     form:state.form,
-    repos:state.repos,
+    repoDivItems:state.repoDivItems,
 })
 const mapDispatchToProps = dispatch => ({
     setTheme: (theme) => dispatch(setTheme(theme)),
@@ -344,7 +339,9 @@ const mapDispatchToProps = dispatch => ({
     changeErrorMessage:(data) => dispatch(changeErrorMessage(data)),
     changeInputFocused:(data) => dispatch(changeInputFocused(data)),
     resetRepoDivItems:() => dispatch(resetRepoDivItems()),
-    addRepoDivItem:(data) => dispatch(addRepoDivItem(data)),
-
+    pushRepoDivItem:(data) => dispatch(pushRepoDivItem(data)),
+    wait:(data) => dispatch(setWait(data)),
+    resultFound:(data) => dispatch(setResultFound(data)),
+    resetForm:(data) => dispatch(resetForm()),
 })
 export default connect(mapStateToProps, mapDispatchToProps)(App)

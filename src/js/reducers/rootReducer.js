@@ -5,7 +5,7 @@ import themeReducer from "./themeReducer";
 import formReducer from "./formReducer";
 
 const rootReducer = combineReducers({
-    repos: reposReducer,
+    repoDivItems: reposReducer,
     infos: infosReducer,
     themeInfo: themeReducer,
     form: formReducer,

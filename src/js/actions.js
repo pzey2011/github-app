@@ -33,11 +33,19 @@ export function changeErrorMessage(data){
 export function changeInputFocused(data){
     return { type: 'CHANGE_INPUTFOCUS', payload: data }
 }
-export function addRepoDivItem(data){
-    return { type: 'ADD_REPO_DIV_ITEM', payload: data }
+export function pushRepoDivItem(data){
+    return { type: 'PUSH_REPO_DIV_ITEM', payload: data }
 }
 export function resetRepoDivItems(data){
     return { type: 'RESET_REPO_DIV_ITEMS', payload: data }
 }
-
+export function setWait(data){
+    return { type: 'CHANGE_WAIT', payload: data }
+}
+export function setResultFound(data){
+    return { type: 'CHANGE_RESULTFOUND', payload: data }
+}
+export function resetForm(){
+    return { type: 'RESET_FORM'}
+}
 

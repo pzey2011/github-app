@@ -1,22 +1,17 @@
-const initialState = {
-    repoDivItemsMap:[],
-};
-function reposReducer(state = initialState, action)
+
+function reposReducer(state = [], action)
 {
     switch(action.type) {
-        case 'ADD_REPO_DIV_ITEM':
+        case 'PUSH_REPO_DIV_ITEM':
             return [
                 ...state,
                 {
-                    id: action.id,
-                    title: action.title,
-                    done: false
+                    updatedAt: action.payload.updatedAt,
+                    divItem: action.payload.divItem
                 }
             ];
         case 'RESET_REPO_DIV_ITEMS':
-            return state = {
-                repoDivItemsMap:[]
-            }
+            return state = []
 
         default:
             return state;

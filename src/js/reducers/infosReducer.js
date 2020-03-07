@@ -12,15 +12,7 @@ function infosReducer(state = initialState, action)
 {
     switch(action.type) {
         case 'RESET_INFO':
-            return state={
-                fullName:"",
-                location:"",
-                company:"",
-                blog:"",
-                blogName:"",
-                avatarUrl:"",
-                errorMessage:""
-            };
+            return initialState;
 
         case 'CHANGE_FULLNAME':
             return state = {

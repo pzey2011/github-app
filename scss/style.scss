@@ -144,6 +144,7 @@ body{
               height: 113px;
               padding: 16px 66px 16px 24px;
               border-radius: 8px;
+              margin-top: 0px;
 
               li.description {
                 margin-top: 10px;
@@ -158,6 +159,7 @@ body{
                 .forked{
                   padding-right: 0px;
                   padding-left: 0px;
+                  margin-right: 2px;
                   color: var(--value-font-color);
                 }
                 .icon-item:first-child {
@@ -172,6 +174,7 @@ body{
               li {
                 .title {
                   font-size: 14px;
+                  margin-right: 35px;
                 }
 
                 .icon-item {
